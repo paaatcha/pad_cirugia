@@ -1,6 +1,6 @@
 const INITIAL_STATE = {
-    cartaoSus: '702-5083-6632-6434'    
-}
+    cartaoSus: ''    
+} 
 
 export default (state = INITIAL_STATE, action) => {
     if (action.type === 'modificaCartaoSus'){
@@ -21,4 +21,4 @@ export default (state = INITIAL_STATE, action) => {
     }
 
     return state;
-} 
+}

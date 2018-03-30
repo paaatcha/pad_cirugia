@@ -2,41 +2,10 @@ import React, { Component } from 'react';
 import { Text, View, Image, StyleSheet, TouchableHighlight, TextInput, Button} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import axios from 'axios';
 
-import { dadosPaciente, resetaPaciente } from '../actions/dadosPacienteActions'
+import { dadosPaciente } from '../actions/dadosPacienteActions'
 
 class TelaRespostaRequisicao extends Component{
-    
-    componentWillMount(){
-        
-        
-        let url = 'http://172.20.75.18:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
-
-        console.log(this.props.cartaoSus);
-        
-        axios.get(url)
-        .then(response => this.processaDado(response) ) 
-        .catch(() => { response => this.processaDado(response) });   
-        
-        
-    } 
-
-    sbruble(){
-
-    }
-
-    
-    processaDado (response){                
-        if (response.data.nome == null){
-            this.props.resetaPaciente();
-            console.log(response.data);    
-        } else {
-            this.props.dadosPaciente(response.data);
-            Actions.telaInicial; 
-        }
-        
-    }
 
     render(){        
         return(
@@ -115,10 +84,9 @@ const estilos = StyleSheet.create({
 
 const mapStateToProps = state => (
     {
-        pac: state.dadosPacienteReducer,
-        cartaoSus: state.buscaCartaoSusReducer.cartaoSus
+        pac: state.dadosPacienteReducer
     }
 
 )
 
-export default connect(mapStateToProps, { dadosPaciente,  resetaPaciente})(TelaRespostaRequisicao);
+export default connect(mapStateToProps, { dadosPaciente })(TelaRespostaRequisicao);
