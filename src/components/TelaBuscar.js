@@ -22,7 +22,7 @@ class TelaBuscar extends Component{
     }
 
     async processaRequisicao (){
-        let url = 'http://192.168.103:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
+        let url = 'http://192.168.1.103:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
 
         await axios.get(url)
         .then( response => {
@@ -80,9 +80,6 @@ class TelaBuscar extends Component{
                         keyboardType='numeric' onChangeText={ texto =>  this.processaTextoEntrada(texto) }
                         placeholder='Digite o número do cartão' maxLength={18}                      
                     /> 
-
-                    <Text> {this.props.pac.nome} </Text>
-
                 </View>
 
                 <View style={estilos.abaixo}> 

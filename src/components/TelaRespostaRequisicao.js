@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StyleSheet, TouchableHighlight, TextInput, Button} from 'react-native';
+import { Text, View, Keyboard, StyleSheet, TouchableHighlight, TextInput, Button} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 import { dadosPaciente } from '../actions/dadosPacienteActions'
 
 class TelaRespostaRequisicao extends Component{
+
+    componentWillMount(){
+        Keyboard.dismiss();
+    }
 
     render(){        
         return(
@@ -47,7 +51,7 @@ class TelaRespostaRequisicao extends Component{
                 
 
                 <View style={estilos.abaixo}>
-                    <Button title='Buscar' onPress={ Actions.telaInicial } />
+                    <Button title='Adicionar lesão' onPress={ Actions.telaAdicionarLesao } />
                 </View> 
             </View>
         );
@@ -61,7 +65,7 @@ const estilos = StyleSheet.create({
     },
 
     acima: {
-        flex: 4
+        flex: 5
     },
 
     abaixo: {
@@ -69,14 +73,14 @@ const estilos = StyleSheet.create({
     },
 
     pacCampo: {
-        fontSize: 17,
-        marginBottom: 3,
+        fontSize: 19,
+        marginBottom: 5,
         fontWeight: 'bold'
         
     },
 
     dadoCampo: {
-        fontSize: 15,
+        fontSize: 17,
         fontWeight: 'normal'
     }
 

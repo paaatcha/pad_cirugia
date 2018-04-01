@@ -4,14 +4,16 @@ import { StyleSheet } from 'react-native'
 import TelaInicial from './components/TelaInicial'; 
 import TelaBuscar from './components/TelaBuscar';
 import TelaRespostaRequisicao from './components/TelaRespostaRequisicao';
+import TelaAdicionarLesao from './components/TelaAdicionarLesao';
 
 
 export default props => (
     <Router navigationBarStyle={estilos.barraNavegacao} titleStyle={estilos.titulo} navBarButtonColor='#FFF' >
         <Scene key='root'>
-            <Scene key='telaInicial' component={TelaInicial} hideNavBar={true} initial={ true }/>
+            <Scene key='telaInicial' component={TelaInicial} hideNavBar={true} />
             <Scene key='telaBuscar' component={TelaBuscar} title='Buscar paciente' />
-            <Scene key='telaRespostaRequisicao' component={TelaRespostaRequisicao} title='Paciente buscado' />
+            <Scene key='telaRespostaRequisicao' component={TelaRespostaRequisicao} title='Dados do paciente' />
+            <Scene key='telaAdicionarLesao'  component={TelaAdicionarLesao} title='Adicionar Lesão' />
         </Scene>
     </Router> 
 ); 
