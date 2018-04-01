@@ -7,71 +7,89 @@ import axios from 'axios';
 import { modificaCartaoSus } from '../actions/buscaCartaoSusActions';
 import { dadosPaciente } from '../actions/dadosPacienteActions';
 
+
 class TelaBuscar extends Component{    
     
     constructor (props){
         super(props);
         this.state = {
-            botaoDesabilitar: true
+            botaoDesabilitar: true            
         }        
+
+        this.processaRequisicao = this.processaRequisicao.bind(this);
+        this.msgPacienteNaoEncontrado = this.msgPacienteNaoEncontrado.bind(this);
+        this.msgFalhaRequisicao = this.msgFalhaRequisicao.bind(this);
     }
 
-    processaRequisicao (){
-        let url = 'http://192.168.1.103:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
+    async processaRequisicao (){
+        let url = 'http://192.168.103:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
 
-        console.log(this.props.cartaoSus);
-        
-        axios.get(url)
-        .then( response => this.props.dadosPaciente(response.data) ) 
-        .catch( () => { this.falhaNaRequisicao() } );   
-        
+        await axios.get(url)
+        .then( response => {
+            this.props.dadosPaciente(response.data);            
 
-        return Actions.telaRespostaRequisicao;
+            if (this.props.pac.nome === null){
+                this.msgPacienteNaoEncontrado();
+            } else {
+                Actions.telaRespostaRequisicao();
+            }
+
+        }) 
+        .catch( () => {
+            this.msgFalhaRequisicao();
+        });
     } 
 
-    processaRespostaRequisicao (dados){
-        if (dados.nome == null){
-            Alert.alert(
-                'Atenção',
-                'Não existe paciente cadastrado com esse nº do cartão do SUS. Verifique o número e tente novamente. Caso ainda assim não consiga, verifique se o paciente existe no sistema web',
-                [             
-                  {text: 'OK', onPress: () => console.log('OK Pressed')},
-                ],
-                { cancelable: false }
-              )
-        } else {
-            this.props.dadosPaciente(dados)
-        }
+    msgPacienteNaoEncontrado (){  
+        Alert.alert(
+            'Atenção',
+            'Não existe paciente cadastrado com esse nº do cartão do SUS. Verifique se o número está correto e tente novamente. Caso ainda assim não consiga, verifique se o paciente existe no sistema web',
+            [             
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ],
+            { cancelable: false }
+        )        
     }
 
-    falhaNaRequisicao (){
-        // TODO: Aplicar o reduxThunk para deixar a requisição sincrona!
-    }
+    msgFalhaRequisicao (){
+        Alert.alert(
+            'Atenção',
+            'Falha na comunicação com o servidor. Verifique se você está conectado na rede PAD-UFES. Se sim, verifique se o 3G do seu celular está ativo. Caso positivo, desative-o. Se ainda assim o erro persistir, contate o administrador do sistema.',
+            [             
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ],
+            { cancelable: false }
+        ) 
+    }  
     
     // Processando o texto para liberar o botão
     processaTextoEntrada (texto) {                
-        this.props.modificaCartaoSus(texto);        
+        this.props.modificaCartaoSus(texto); 
         this.setState({botaoDesabilitar: texto.length != 18});
 
         console.log(texto)        
-    }
+    } 
     
     render(){
-        console.log(this.state)
+        //console.log(this.state)
         return(
             <View style={estilos.tudo} >                
                 <View style={estilos.acima}> 
                     <Text style={estilos.texto}> Digite o nº do cartão do SUS: </Text>                
                     <TextInput value={this.props.cartaoSus} style={ estilos.inputs} 
                         keyboardType='numeric' onChangeText={ texto =>  this.processaTextoEntrada(texto) }
-                        placeholder='Digite o número do cartão' maxLength={18}                     
-                    />
+                        placeholder='Digite o número do cartão' maxLength={18}                      
+                    /> 
+
+                    <Text> {this.props.pac.nome} </Text>
 
                 </View>
 
-                <View style={estilos.abaixo}>
-                    <Button title='Buscar' onPress={ this.processaRequisicao() } disabled={this.state.botaoDesabilitar}/>
+                <View style={estilos.abaixo}> 
+                    <Button title='Buscar' onPress={ this.processaRequisicao } disabled={this.state.botaoDesabilitar}/>                    
                 </View> 
+
+                
             </View>
         );
     }

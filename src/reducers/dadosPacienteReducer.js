@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-    nome: '',
+    nome: '000',
     pront:'',
     alergia:'',
     diabetes:'',
