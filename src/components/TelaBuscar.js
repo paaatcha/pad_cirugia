@@ -22,7 +22,9 @@ class TelaBuscar extends Component{
     }
 
     async processaRequisicao (){
-        let url = 'http://192.168.1.103:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
+        let url = 'http://172.20.75.18:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
+
+        console.log(url);
 
         await axios.get(url)
         .then( response => {
@@ -63,9 +65,10 @@ class TelaBuscar extends Component{
     }  
     
     // Processando o texto para liberar o botão
-    processaTextoEntrada (texto) {                
-        this.props.modificaCartaoSus(texto); 
-        this.setState({botaoDesabilitar: texto.length != 18});
+    processaTextoEntrada (texto) {          
+        this.props.modificaCartaoSus(texto);
+        const filtro = /^([0-9]){3}-([0-9]){4}-([0-9]){4}-([0-9]){4}$/;
+        this.setState({ botaoDesabilitar: !filtro.test(texto) });     
 
         console.log(texto)        
     } 
@@ -99,7 +102,8 @@ const estilos = StyleSheet.create({
     },
 
     acima: {
-        flex: 1
+        flex: 1,
+        marginTop: 15
     },
 
     abaixo: {

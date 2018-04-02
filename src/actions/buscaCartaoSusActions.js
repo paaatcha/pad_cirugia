@@ -6,3 +6,11 @@ export const modificaCartaoSus = (texto) => {
         }
     );
 }
+
+export const resetarCartaoSus = (texto) => {
+    return (
+        {
+            type: 'resetarCartaoSus'            
+        }
+    );
+}

@@ -18,6 +18,8 @@ export default (state = INITIAL_STATE, action) => {
         }
 
         return { ...state, cartaoSus: cartao } 
+    } else if (action.type === 'resetarCartaoSus'){        
+        return { ...state, INITIAL_STATE } 
     }
 
     return state;

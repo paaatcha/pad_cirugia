@@ -1,13 +1,13 @@
-export const dadosPaciente = (dados) => {
+export const adicionarLesaoPac = (dados) => {
     return (
         {
-            type: 'dadosPaciente',
+            type: 'adicionarLesao',
             payload: dados
         }
     );
 }
 
-export const resetarPaciente = () => {
+export const resetarPaciente = (dados) => {
     return (
         {
             type: 'resetarPaciente'            

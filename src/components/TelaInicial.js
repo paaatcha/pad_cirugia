@@ -74,10 +74,11 @@ const estilos = StyleSheet.create ({
     },
 
     textoCadastro: {
-        fontSize: 20, 
+        fontSize: 18, 
         textAlign: 'center',
         marginTop: 20,
-        fontWeight: '400'
+        fontWeight: '700',
+        color: '#3596DB'
 
     }
 });
