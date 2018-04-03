@@ -25,7 +25,7 @@ export default (state = INITIAL_STATE, action) => {
     } if (action.type === 'adicionarImg'){        
         return { ...state, imagens: [...state.imagens, action.payload] };
     } if (action.type === 'resetarLesao'){
-        return { ...state, INITIAL_STATE }
+        return { ...state, ...INITIAL_STATE }
     }    
 
     return state;

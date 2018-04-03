@@ -7,7 +7,7 @@ export const adicionarLesaoPac = (dados) => {
     );
 }
 
-export const resetarPaciente = (dados) => {
+export const resetarPaciente = () => {
     return (
         {
             type: 'resetarPaciente'            

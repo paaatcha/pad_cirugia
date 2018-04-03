@@ -7,7 +7,7 @@ export const modificaCartaoSus = (texto) => {
     );
 }
 
-export const resetarCartaoSus = (texto) => {
+export const resetarCartaoSus = () => {
     return (
         {
             type: 'resetarCartaoSus'            

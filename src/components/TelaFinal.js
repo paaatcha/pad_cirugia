@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, Button, Alert, Image} from 'react-native';
+import { Text, View, StyleSheet, TextInput, Button, Alert, Image, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -20,7 +20,7 @@ class TelaFinal extends Component{
                 </View>
 
                 <View style={estilos.abaixo}>
-                    <Button title='Voltar para tela inicial' onPress={ Actions.telaInicial } />
+                    <Button title='Voltar para tela inicial' onPress={ Actions.telaInicial } color={Platform.select({ios:'#FFF'})} />
                 </View>
                 
             </View>
@@ -44,7 +44,13 @@ const estilos = StyleSheet.create({
 
     abaixo: {  
         flex: 1,
-        width: '100%'      
+        width: '100%',
+        
+        ...Platform.select({
+            ios: {
+                backgroundColor: '#3596DB'                
+            }
+        })        
     },
 
     imgSucesso: {

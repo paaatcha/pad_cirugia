@@ -75,7 +75,8 @@ const estilos = StyleSheet.create({
     },
 
     acima: {
-        flex: 3      
+        flex: 3,
+        backgroundColor: '#d9d9d9'      
     },
 
     abaixo: {
@@ -97,14 +98,14 @@ const estilos = StyleSheet.create({
     },
 
     pacCampo: {
-        fontSize: 19,
+        fontSize: 17,
         marginBottom: 5,
         fontWeight: 'bold'
         
     },
 
     dadoCampo: {
-        fontSize: 17,
+        fontSize: 15,
         fontWeight: 'normal'
     },
 
@@ -114,10 +115,11 @@ const estilos = StyleSheet.create({
     },  
     
     textoImg: {
-        fontSize: 14, 
+        fontSize: 15, 
         textAlign: 'center',        
         fontWeight: '700',
-        color: '#3596DB'
+        color: '#3596DB',
+        marginTop: 15
 
     }    
 

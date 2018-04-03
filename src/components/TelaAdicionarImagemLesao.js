@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, TouchableHighlight, Image, StyleSheet, Keyboard, TextInput, Button} from 'react-native';
+import { Text, View, ScrollView, TouchableHighlight, Image, StyleSheet, Keyboard, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { ImagePicker, Permissions } from 'expo';
@@ -14,7 +14,8 @@ class TelaAdicionarImagemLesao extends Component {
     state = {
         image: null,
         image64: null,
-        hasCameraPermission: null        
+        hasCameraPermission: null,
+        seguirSemImg: false        
     };
 
     async componentWillMount(){
@@ -41,11 +42,32 @@ class TelaAdicionarImagemLesao extends Component {
           this.props.adicionarImg(result);
         }
     }; 
+
+    msgFormImagem (){
+        Alert.alert(
+            'Atenção',
+            'Você não inseriu a imagem da lesão do paciente. Deseja continuar sem a imagem?',
+            [             
+                {text: 'Sim', onPress: () => {
+                        this.props.adicionarLesaoPac(this.props.lesao);
+                        this.props.resetarLesao();
+                        Actions.telaListarLesoes();
+                    }
+                },
+                {text: 'Não', onPress: () => console.log('Não msgFormImg pressionado')},
+            ],
+            { cancelable: false }
+        )         
+    }   
     
     _concluir = () => {
-        this.props.adicionarLesaoPac(this.props.lesao);
-        this.props.resetarLesao();
-        Actions.telaListarLesoes();
+        if (this.props.lesao.imagens.length == 0){
+            this.msgFormImagem();
+        } else {
+            this.props.adicionarLesaoPac(this.props.lesao);
+            this.props.resetarLesao();
+            Actions.telaListarLesoes();
+        }        
     }
 
     render(){
@@ -91,7 +113,9 @@ class TelaAdicionarImagemLesao extends Component {
                             <Text style={estilos.dadoCampo}> {this.props.lesao.obs.toUpperCase()} </Text>
                         </Text>  
 
-                        <Text style={estilos.pacCampo}> Imagens: </Text>  
+                        <Text style={estilos.pacCampo}> Imagens: 
+                            <Text style={estilos.dadoCampo}> {this.props.lesao.imagens.length} </Text>
+                        </Text>  
                         <View style={estilos.exibirImagens}>
                             { 
                                 imagensExibir 
@@ -117,7 +141,9 @@ class TelaAdicionarImagemLesao extends Component {
 
 
                 <View style={estilos.botao}> 
-                    <Button title='Adicionar esta lesão' onPress={ this._concluir } />                    
+                    <Button title='Adicionar esta lesão' onPress={ this._concluir } 
+                        color={Platform.select({ios:'#FFF'})}    
+                    />                    
                 </View>           
                 
                 
@@ -144,7 +170,8 @@ const estilos = StyleSheet.create({
         paddingBottom: 3,
         borderTopColor: 'black',
         borderTopWidth: 1,
-        paddingTop: 3         
+        paddingTop: 3,
+        backgroundColor: '#d9d9d9'
     },
 
     titulo:{
@@ -185,13 +212,19 @@ const estilos = StyleSheet.create({
 
     botao: {
         marginBottom: 50,
-        marginTop: 20
+        marginTop: 20,
+
+        ...Platform.select({
+            ios: {
+                backgroundColor: '#3596DB'                
+            }
+        })           
+        
     },
 
     pacCampo: {
         fontSize: 14,        
-        fontWeight: 'bold'
-        
+        fontWeight: 'bold'        
     },    
 
     dadoCampo: {

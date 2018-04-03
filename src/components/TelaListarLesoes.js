@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Image, StyleSheet, TouchableHighlight, TextInput, Button, Alert} from 'react-native';
+import { Text, View, ScrollView, Image, StyleSheet, TouchableHighlight, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
+import { resetarPaciente } from '../actions/pacienteActions';
+
+import { resetarCartaoSus } from '../actions/buscaCartaoSusActions';
+
 const addLesao = require ('../../img/addLesao.png');
 
+
+
 class TelaListarLesoes extends Component {
+ 
+
+    _finalizarAplicacao = () =>{      
+        this.props.resetarPaciente();
+        this.props.resetarCartaoSus();        
+        Actions.telaInicial ();
+    }
 
     render(){
-        let lesoesPacientes = [];                
+        let lesoesPacientes = [];                        
 
         for (let i=0; i<this.props.pac.lesoes.length; i++){
             let lesao = this.props.pac.lesoes[i];
@@ -44,7 +57,9 @@ class TelaListarLesoes extends Component {
                                 <Text style={estilos.dadoCampo}> {lesao.obs.toUpperCase()} </Text>
                             </Text> 
 
-                            <Text style={estilos.pacCampo}> Imagens: </Text> 
+                            <Text style={estilos.pacCampo}> Imagens: 
+                                <Text style={estilos.dadoCampo}> {lesao.imagens.length} </Text>
+                            </Text> 
                                 <View style={estilos.exibirImagens}>                            
                                     {
                                         imagensExibir
@@ -59,7 +74,7 @@ class TelaListarLesoes extends Component {
             
             <ScrollView style={estilos.tudo} >                
                  
-                 <View style={estilos.acima}>
+                <View style={estilos.acima}>
 
                     <Text style={estilos.titulo}> Lesões do paciente </Text>
 
@@ -68,11 +83,7 @@ class TelaListarLesoes extends Component {
                     }
                                      
 
-                    </View>
-
-
-                    
-
+                </View>
 
                 <View style={estilos.abaixo} >
                     <TouchableHighlight onPress={ Actions.telaAdicionarLesao } >
@@ -84,7 +95,7 @@ class TelaListarLesoes extends Component {
                 </View>             
 
                     <View style={estilos.botao}> 
-                        <Button title='Finalizar' onPress={ () => false } />                    
+                        <Button title='Finalizar' onPress={ this._finalizarAplicacao } color={Platform.select({ios:'#FFF'})} />                    
                     </View>
 
 
@@ -112,7 +123,8 @@ const estilos = StyleSheet.create({
         borderTopColor: 'black',
         borderTopWidth: 1,
         paddingTop: 3,
-        marginTop: 2         
+        marginTop: 2, 
+        backgroundColor: '#d9d9d9'         
     },
 
     titulo:{
@@ -144,16 +156,23 @@ const estilos = StyleSheet.create({
     },
     
     textoImg: {
-        fontSize: 14, 
+        fontSize: 15, 
         textAlign: 'center',        
         fontWeight: '700',
-        color: '#3596DB'
+        color: '#3596DB',
+        marginTop: 15
 
     },
 
     botao: {
         marginBottom: 50,
-        marginTop: 20
+        marginTop: 20,
+
+        ...Platform.select({
+            ios: {
+                backgroundColor: '#3596DB'                
+            }
+        })        
     },
 
     pacCampo: {
@@ -180,4 +199,4 @@ const mapStateToProps = state => (
 
 )
 
-export default connect(mapStateToProps, null)(TelaListarLesoes);
+export default connect(mapStateToProps, { resetarPaciente, resetarCartaoSus } )(TelaListarLesoes);

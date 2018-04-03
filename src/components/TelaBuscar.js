@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, Button, Alert} from 'react-native';
+import { Text, View, StyleSheet, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -82,11 +82,16 @@ class TelaBuscar extends Component{
                     <TextInput value={this.props.cartaoSus} style={ estilos.inputs} 
                         keyboardType='numeric' onChangeText={ texto =>  this.processaTextoEntrada(texto) }
                         placeholder='Digite o número do cartão' maxLength={18}                      
+                        onSubmitEditing={ this.processaRequisicao }
                     /> 
                 </View>
 
                 <View style={estilos.abaixo}> 
-                    <Button title='Buscar' onPress={ this.processaRequisicao } disabled={this.state.botaoDesabilitar}/>                    
+                    <View style={estilos.botao}>
+                        <Button title='Buscar' onPress={ this.processaRequisicao } color={Platform.select({ios:'#FFF'})}
+                            disabled={this.state.botaoDesabilitar}                            
+                        />                    
+                    </View>
                 </View> 
 
                 
@@ -116,9 +121,27 @@ const estilos = StyleSheet.create({
     },
 
     inputs: {
-        fontSize: 20,
-        height: 45        
-    }
+        fontSize: 16,
+        height: 35,
+        marginBottom: 3,
+        ...Platform.select({
+            ios: {
+                backgroundColor: '#d9d9d9',
+                marginBottom: 8
+            }
+        })       
+    },
+
+    botao: {
+        ...Platform.select({
+            ios: {
+                backgroundColor: '#3596DB'                
+            }
+        })           
+
+    }    
+
+        
 
 });
 

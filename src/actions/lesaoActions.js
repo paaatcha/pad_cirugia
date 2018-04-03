@@ -70,7 +70,7 @@ export const adicionarImg = (dados) => {
     );
 }
 
-export const resetarLesao = (dados) => {
+export const resetarLesao = () => {
     return (
         {
             type: 'resetarLesao'            

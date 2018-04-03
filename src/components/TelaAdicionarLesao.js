@@ -11,8 +11,8 @@ class TelaAdicionarLesao extends Component {
     constructor (props){
         super(props);
         this.state = {
-            botaoDesabilitar: true            
-        }        
+            botaoDesabilitar: true
+        }
 
         this.processaEntradas = this.processaEntradas.bind(this);        
     }
@@ -32,7 +32,7 @@ class TelaAdicionarLesao extends Component {
             ],
             { cancelable: false }
         ) 
-    } 
+    }    
 
     processaEntradas(){
         if (this.props.lesao.regiao == ''){            
@@ -51,15 +51,18 @@ class TelaAdicionarLesao extends Component {
     }
 
     render(){
+        
+
         return (
             
-            <ScrollView style={estilos.tudo} >                
-                 
+            <ScrollView style={estilos.tudo} >                                 
                     
                     <View>
                         <Text style={estilos.texto}> Região: </Text>                
                         <TextInput  style={ estilos.inputs} value={this.props.lesao.regiao} 
                             onChangeText={ texto => this.props.alterarRegiao(texto) }
+                            onSubmitEditing={() => this.diaMaiorRef.focus()} 
+                            blurOnSubmit={false}
                         /> 
                     </View>
 
@@ -67,6 +70,9 @@ class TelaAdicionarLesao extends Component {
                         <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
                         <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMaior} 
                             onChangeText={ texto => this.props.alterarDiaMaior(texto) }
+                            onSubmitEditing={() => this.diaMenorRef.focus()} 
+                            ref={(ref) => this.diaMaiorRef=ref}
+                            blurOnSubmit={false}
                         />    
                     </View>
 
@@ -74,6 +80,9 @@ class TelaAdicionarLesao extends Component {
                         <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
                         <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMenor}  
                             onChangeText={ texto => this.props.alterarDiaMenor(texto) }
+                            onSubmitEditing={() => this.diagRef.focus()} 
+                            ref={(ref) => this.diaMenorRef=ref}
+                            blurOnSubmit={false}
                         /> 
                     </View>
 
@@ -82,6 +91,9 @@ class TelaAdicionarLesao extends Component {
                         <Text style={estilos.texto}> Diagnóstico: </Text>                
                         <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
                             onChangeText={ texto => this.props.alterarDiagnostico(texto) }
+                            onSubmitEditing={() => this.procRef.focus()} 
+                            ref={(ref) => this.diagRef=ref}
+                            blurOnSubmit={false}
                         />      
                     </View>
 
@@ -90,6 +102,9 @@ class TelaAdicionarLesao extends Component {
                         <Text style={estilos.texto}> Procedimento: </Text>                
                         <TextInput  style={ estilos.inputs} value={this.props.lesao.procedimento} 
                             onChangeText={ texto => this.props.alterarProcedimento(texto) }
+                            onSubmitEditing={() => this.obsRef.focus()} 
+                            ref={(ref) => this.procRef=ref}
+                            blurOnSubmit={false}                            
                         />    
                     </View>
 
@@ -98,12 +113,14 @@ class TelaAdicionarLesao extends Component {
                         <Text style={estilos.texto}> Observação: </Text>                
                         <TextInput style={ estilos.inputs} value={this.props.lesao.obs} 
                             onChangeText={ texto => this.props.alterarObs(texto) }
+                            ref={(ref) => this.obsRef=ref}
+                            blurOnSubmit={false}                            
                         />                                                                                          
                     </View>
 
 
                 <View style={estilos.botao}> 
-                    <Button title='Adicionar lesão' onPress={ this.processaEntradas } color="#FFF"/>                    
+                    <Button title='Adicionar lesão' onPress={ this.processaEntradas } color={Platform.select({ios:'#FFF'})} />                    
                 </View> 
                   
                 
@@ -143,7 +160,7 @@ const estilos = StyleSheet.create({
         marginBottom: 3,
         ...Platform.select({
             ios: {
-                backgroundColor: '#ccc',
+                backgroundColor: '#d9d9d9',
                 marginBottom: 8
             }
         })       
