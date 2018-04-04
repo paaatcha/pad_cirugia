@@ -40,6 +40,7 @@ class TelaAdicionarImagemLesao extends Component {
           this.setState({ image64: result.base64 });
 
           this.props.adicionarImg(result);
+          console.log(result);
         }
     }; 
 

@@ -1,9 +1,9 @@
 const INITIAL_STATE = {
-    regiao: '',
-    diaMaior: '',
-    diaMenor: '',
-    diagnostico: '',
-    procedimento: '',
+    regiao: 'perna',
+    diaMaior: '10',
+    diaMenor: '5',
+    diagnostico: 'cbc',
+    procedimento: 'bex',
     obs: 'NENHUMA',
     imagens: []
 }
