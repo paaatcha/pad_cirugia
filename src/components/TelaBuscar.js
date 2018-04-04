@@ -22,7 +22,7 @@ class TelaBuscar extends Component{
     }
 
     async processaRequisicao (){
-        let url = 'http://172.20.75.18:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
+        let url = 'http://192.168.1.175:8080/APIrequisicoes/pegaPaciente.xhtml?cartaosus=' + this.props.cartaoSus;
 
         console.log(url);
 

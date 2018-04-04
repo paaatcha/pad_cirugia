@@ -18,7 +18,7 @@ export default props => (
         <Scene key='root'>
             <Scene key='telaInicial' component={TelaInicial} hideNavBar={true} />
 
-            <Scene key='telaBuscar' initial component={TelaBuscar} title='Buscar paciente' />
+            <Scene key='telaBuscar' component={TelaBuscar} title='Buscar paciente' />
 
             <Scene key='telaRespostaRequisicao' component={TelaRespostaRequisicao} title='Dados do paciente' />
 

@@ -49,7 +49,7 @@ class TelaRespostaRequisicao extends Component{
                         </Text>                
 
                         <Text style={estilos.pacCampo}> Pressão arterial diastolica: 
-                            <Text style={estilos.dadoCampo}> {this.props.pac.pressao_sis} </Text>                                
+                            <Text style={estilos.dadoCampo}> {this.props.pac.pressao_dis} </Text>                                
                         </Text>
                     </View>
                 </View>
