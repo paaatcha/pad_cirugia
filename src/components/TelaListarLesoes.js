@@ -59,8 +59,7 @@ class TelaListarLesoes extends Component {
                         type: 'image/jpg'
                     }            
                 );
-            }
-                
+            }                
 
             await axios({
                 method: 'post', 
@@ -86,14 +85,14 @@ class TelaListarLesoes extends Component {
     }
 
     render(){
-        let lesoesPacientes = [];                        
-
+        let lesoesPacientes = [];                       
+ 
         for (let i=0; i<this.props.pac.lesoes.length; i++){
             let lesao = this.props.pac.lesoes[i];
             let imagensExibir = [];
 
-            for (let i=0; i<lesao.imagens.length; i++){
-                imagensExibir.push(<Image key={ lesao.imagens[i].uri } source={ lesao.imagens[i] } style={estilos.imgMiniLesao} />);
+            for (let k=0; k<lesao.imagens.length; k++){
+                imagensExibir.push(<Image key={ lesao.imagens[k].uri } source={ lesao.imagens[k] } style={estilos.imgMiniLesao} />);
             }
 
             lesoesPacientes.push(

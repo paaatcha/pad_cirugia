@@ -16,7 +16,7 @@ class TelaFinal extends Component{
                 
                 <View style={estilos.acima}>
                     <Image style={estilos.imgSucesso} source={imgSucesso} />
-                    <Text style={ estilos.textoImg }> Inclusão realizada com sucesso </Text> 
+                    <Text style={ estilos.textoImg }> Inclusão realizada com sucesso </Text>  
                 </View>
 
                 <View style={estilos.abaixo}>
@@ -33,7 +33,11 @@ const estilos = StyleSheet.create({
         flex: 1,
         padding: 20,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderWidth: 3,
+        borderColor: '#3596DB',
+        margin: 20,
+        marginTop: 40
     },
 
     acima: {        
@@ -59,7 +63,7 @@ const estilos = StyleSheet.create({
     },
        
     textoImg: {
-        fontSize: 14, 
+        fontSize: 17, 
         textAlign: 'center',        
         fontWeight: '700',
         color: '#3596DB'
