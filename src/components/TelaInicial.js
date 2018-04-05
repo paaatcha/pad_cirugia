@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux';
 const cadastroPacienteImg = require ('../../img/cadastrarPaciente.png')
 
 class TelaInicial extends Component{
+        
     render() {
         return (
             <View style={estilos.tudo} >

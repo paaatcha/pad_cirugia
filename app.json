@@ -1,5 +1,10 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
+    "sdkVersion": "25.0.0",
+    "orientation": "portrait",    
+    "icon": "./img/iconPAD.png",
+    "name": "PAD cirurgia",
+    "slug": "pad_cirurgia",
+    "description": "App para inclusão de lesões dos pacientes que são submetidos a cirurgia no PAD"    
   }
 }

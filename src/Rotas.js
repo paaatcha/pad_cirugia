@@ -14,7 +14,7 @@ import TelaFinal from './components/TelaFinal'
 const margem = Platform.OS === 'ios' ? 0 : 45;
 
 export default props => (
-    <Router navigationBarStyle={estilos.barraNavegacao} titleStyle={estilos.titulo} navBarButtonColor='#FFF' backTitle = " "> 
+    <Router navigationBarStyle={estilos.barraNavegacao} titleStyle={estilos.titulo} navBarButtonColor='#FFF' backTitle = " " > 
         <Scene key='root'>
             <Scene key='telaInicial' component={TelaInicial} hideNavBar={true} />
 
