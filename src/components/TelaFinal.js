@@ -34,10 +34,11 @@ const estilos = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 3,
+        borderWidth: 1,
         borderColor: '#3596DB',
         margin: 20,
-        marginTop: 40
+        marginTop: 45
+        
     },
 
     acima: {        

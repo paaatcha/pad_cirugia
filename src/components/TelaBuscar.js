@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, Button, Alert, Platform} from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator, Keyboard, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -13,7 +13,8 @@ class TelaBuscar extends Component{
     constructor (props){
         super(props);
         this.state = {
-            botaoDesabilitar: true            
+            botaoDesabilitar: true,
+            animating: false
         }        
 
         this.processaRequisicao = this.processaRequisicao.bind(this);
@@ -25,21 +26,25 @@ class TelaBuscar extends Component{
         let url = 'http://172.20.75.18:8080/APIrequisicoes/paciente/' + this.props.cartaoSus;
 
         console.log(url);
+        Keyboard.dismiss();
+        this.setState({animating: true});
 
         await axios.get(url)
-        .then( response => {
+        .then( response => {            
             this.props.dadosPaciente(response.data);            
 
             if (this.props.pac.nome === null){
                 this.msgPacienteNaoEncontrado();
             } else {
-                Actions.telaRespostaRequisicao();
+                Actions.telaRespostaRequisicao();                
             }
 
         }) 
         .catch( () => {
             this.msgFalhaRequisicao();
         });
+
+        this.setState({animating: false});
     } 
 
     msgPacienteNaoEncontrado (){  
@@ -74,8 +79,9 @@ class TelaBuscar extends Component{
     } 
     
     render(){
-        //console.log(this.state)
-        return(
+        //console.log(this.state.animating);
+        return(          
+            
             <View style={estilos.tudo} >                
                 <View style={estilos.acima}> 
                     <Text style={estilos.texto}> Digite o nº do cartão do SUS: </Text>                
@@ -86,16 +92,39 @@ class TelaBuscar extends Component{
                     /> 
                 </View>
 
+            {
+                !this.state.animating &&
                 <View style={estilos.abaixo}> 
                     <View style={estilos.botao}>
                         <Button title='Buscar' onPress={ this.processaRequisicao } color={Platform.select({ios:'#FFF'})}
                             disabled={this.state.botaoDesabilitar}                            
                         />                    
-                    </View>
-                </View> 
+                    </View>                    
+                </View>
+            }
 
-                
+            {
+                this.state.animating &&
+                <View style={estilos.gifEspera}>
+                    <ActivityIndicator 
+                    size={Platform.select(
+                        {
+                            ios: 'large',
+                            android: 100
+                        }
+                    )}
+                    
+                    color="#2196F3" />
+                    <Text style={estilos.textoGif}> Buscando... </Text>
+                </View>
+            }                        
+
+
             </View>
+
+            
+
+            
         );
     }
 }
@@ -103,7 +132,10 @@ class TelaBuscar extends Component{
 const estilos = StyleSheet.create({
     tudo: {
         flex: 1,
-        padding: 20
+        padding: 20,
+        borderWidth: 1,
+        borderColor: '#999',
+        margin: 7        
     },
 
     acima: {
@@ -139,7 +171,26 @@ const estilos = StyleSheet.create({
             }
         })           
 
-    }    
+    },
+
+    gifEspera: {
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        zIndex: 10,
+        position: 'absolute',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center'               
+    },
+
+    textoGif:{
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#FFF',
+        marginTop: 10
+    }
 
         
 

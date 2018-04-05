@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Image, StyleSheet, TouchableHighlight, TextInput, Button, Alert, Platform} from 'react-native';
+import { Text, View, ScrollView, Image, StyleSheet, ActivityIndicator, TouchableHighlight, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -8,42 +8,56 @@ import { resetarPaciente } from '../actions/pacienteActions';
 
 import { resetarCartaoSus } from '../actions/buscaCartaoSusActions';
 
-const addLesao = require ('../../img/addLesao.png');
+const addLesao = require ('../../img/addNovaLesao.png');
+const uploadLesao = require ('../../img/UploadLesao.png');
 
 
 
 class TelaListarLesoes extends Component {
  
+    state = {
+        animating: false,
+        andamento: ''
+    }
 
-    _finalizarAplicacao = async () => {  
-        /*
-        let urlPost = 'http://172.20.75.18:8080//APIrequisicoes/paciente/cadastrarLesoes/' + '111-1111-1111-1111' 
-        var dados = new FormData ();
-        const img = {
-            uri: 'file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Ftemplate-0a5e87fa-fe7b-444e-9946-3df15ba9ab93/ImagePicker/16c6db34-b872-4813-95ba-175c0ed1a7c7.jpg',
-            name: 'imagem.jpg',
-            type: 'image/jpg'
-        }
+    _iniciaEnvio = () => {
+        Alert.alert(
+            'Enviando as lesões para o banco de dados',
+            'O envio dos dados será iniciado. O tempo de envio pode levar alguns segundos e varia de acordo com o número de lesões e imagens adicionadas.',
+            [             
+                {text: 'OK', onPress: () => this._finalizarAplicacao() },
+            ],
+            { cancelable: false }
+        )  
+    } 
 
-        const img2 = {
-            uri: 'file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Ftemplate-0a5e87fa-fe7b-444e-9946-3df15ba9ab93/ImagePicker/16c6db34-b872-4813-95ba-175c0ed1a7c7.jpg',
-            name: 'imagem.jpg',
-            type: 'image/jpg'
-        }        
+    _msgInicioEnvio = () => {
+        Alert.alert(
+            'Falha no envio dos dados',
+            'Ocorreu uma falha ao enviar os dados para o servidor. Verifique se você está conectado na rede PADUFES e se seu 3G está desligado. Após a verificação, tente novamente.',
+            [             
+                {text: 'OK', onPress: () => console.log('OK msgFalhaEnvio')},
+            ],
+            { cancelable: false }
+        )  
+    }    
 
-        dados.append('nome', 'Fulano');
-        dados.append('imagem', img);  
-        dados.append('imagem', img2); 
-        */
+    _finalizarAplicacao = async () => {   
 
         let lesoes = this.props.pac.lesoes;
         let urlPost = 'http://172.20.75.18:8080//APIrequisicoes/paciente/cadastrarLesoes/' + this.props.cartaoSus;  
-               
+        let okEnvio = false; 
+        
+        this.setState({
+            animating: true            
+        });
 
        for(let i=0; i<lesoes.length; i++){
             let les = lesoes[i];             
             let dados = new FormData(); 
-            let imagens = les.imagens;   
+            let imagens = les.imagens;  
+            
+            this.setState({andamento: (i+1).toString() + ' de ' + lesoes.length.toString() + '...' }); 
 
             dados.append('regiao', les.regiao);
             dados.append('diaMaior', les.diaMaior);
@@ -68,17 +82,18 @@ class TelaListarLesoes extends Component {
                 config: {'Content-Type': 'multipart/form-data'}
             })
             .then(response => {
-                console.log(response.status);                
+                console.log(response.status);                  
+                okEnvio = true;              
             })
-            .catch (response => console.log('Deu ruim'));
+            .catch ( () => this._msgFalhaEnvio() );
 
         }   
 
-
-        this.props.resetarPaciente();
-        this.props.resetarCartaoSus();        
-        Actions.telaFinal ();
-
+        if (okEnvio){
+            this.props.resetarPaciente();
+            this.props.resetarCartaoSus();        
+            Actions.telaFinal ();        
+        } 
 
         
 
@@ -136,11 +151,11 @@ class TelaListarLesoes extends Component {
         
         return (
             
-            <ScrollView style={estilos.tudo} >                
-                 
-                <View style={estilos.acima}>
+            <ScrollView style={estilos.tudo} >    
 
-                    <Text style={estilos.titulo}> Lesões do paciente </Text>
+                <View style={estilos.acima}>                  
+
+                    <Text style={estilos.titulo}> Lesões adicionadas ao paciente: </Text>
 
                     {
                         lesoesPacientes
@@ -152,16 +167,33 @@ class TelaListarLesoes extends Component {
                 <View style={estilos.abaixo} >
                     <TouchableHighlight onPress={ Actions.telaAdicionarLesao } >
                         <View>
-                            <Image source={ addLesao } style={ estilos.imgCadastro } />
-                            <Text style={ estilos.textoImg }> Adicionar nova lesão </Text> 
+                            <Image source={ addLesao } style={ estilos.imgCadastro } />                            
                         </View>
                     </TouchableHighlight>
-                </View>             
 
-                    <View style={estilos.botao}> 
-                        <Button title='Finalizar' onPress={ this._finalizarAplicacao } color={Platform.select({ios:'#FFF'})} />                    
+                    <TouchableHighlight onPress={ this._iniciaEnvio } >
+                        <View>
+                            <Image source={ uploadLesao } style={ estilos.imgCadastro } />                            
+                        </View>
+                    </TouchableHighlight>                    
+                </View>   
+
+           
+                {
+                    this.state.animating &&
+                    <View style={estilos.gifEspera}>
+                        <ActivityIndicator 
+                        size={Platform.select(
+                            {
+                                ios: 'large',
+                                android: 100
+                            }
+                        )}
+                        
+                        color="#FFF" />
+                        <Text style={estilos.textoGif}> Enviando {this.state.andamento} </Text>
                     </View>
-
+                }  
 
 
             </ScrollView>
@@ -173,7 +205,11 @@ class TelaListarLesoes extends Component {
 const estilos = StyleSheet.create({
     tudo: {
         flex: 1,
-        padding: 20
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#999',
+        margin: 7,
+               
     },
 
     acima: {
@@ -209,8 +245,9 @@ const estilos = StyleSheet.create({
     },
 
     imgCadastro: {
-        height: 150,
-        width: 150                     
+        height: 104,
+        width: 260,
+        marginTop: 20                     
     },
 
     imgMiniLesao: {
@@ -252,7 +289,26 @@ const estilos = StyleSheet.create({
     
     exibirImagens: {
         flexDirection: 'row'
-    }
+    },
+
+    gifEspera: {
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        zIndex: 10,
+        position: 'absolute',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center'               
+    },
+
+    textoGif:{
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#FFF',
+        marginTop: 10
+    }    
 
 });
 

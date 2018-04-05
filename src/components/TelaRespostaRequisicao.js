@@ -15,7 +15,7 @@ class TelaRespostaRequisicao extends Component{
 
     render(){        
         return(
-        <ScrollView style={estilos.tudo} >                
+        <View style={estilos.tudo} >                
                 
                 <View style={estilos.acima}>
 
@@ -57,13 +57,12 @@ class TelaRespostaRequisicao extends Component{
                 <View style={estilos.abaixo} >
                     <TouchableHighlight onPress={ Actions.telaAdicionarLesao } >
                         <View>
-                            <Image source={ addLesao } style={ estilos.imgAddLesao } />
-                            <Text style={ estilos.textoImg }> Adicionar lesão </Text> 
+                            <Image source={ addLesao } style={ estilos.imgAddLesao } />                            
                         </View>
                     </TouchableHighlight>
                 </View>                 
 
-            </ScrollView>
+            </View>
         );
     }
 }
@@ -71,12 +70,14 @@ class TelaRespostaRequisicao extends Component{
 const estilos = StyleSheet.create({
     tudo: {
         flex: 1,
-        padding: 10
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#999',
+        margin: 7        
     },
 
     acima: {
-        flex: 3,
-        backgroundColor: '#d9d9d9'      
+        flex: 4,              
     },
 
     abaixo: {
@@ -94,7 +95,8 @@ const estilos = StyleSheet.create({
         borderTopColor: 'black',
         borderTopWidth: 1,
         paddingTop: 3,
-        marginTop: 2          
+        marginTop: 2,
+        backgroundColor: '#d9d9d9'          
     },
 
     pacCampo: {
@@ -110,8 +112,8 @@ const estilos = StyleSheet.create({
     },
 
     imgAddLesao: {
-        height: 150,
-        width: 150                     
+        height: 104,
+        width: 260                     
     },  
     
     textoImg: {

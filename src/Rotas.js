@@ -26,13 +26,13 @@ export default props => (
                 renderLeftButton={<View/>} titleStyle={{marginLeft: margem}}
             />
 
-            <Scene key='telaAdicionarImagemLesao' component={TelaAdicionarImagemLesao} title='Adicionar imagem' 
+            <Scene key='telaAdicionarImagemLesao'  component={TelaAdicionarImagemLesao} title='Adicionar imagem' 
                 renderLeftButton={<View/>} titleStyle={{marginLeft: margem}} 
                 backTitle=" "
             />
 
 
-            <Scene key='telaListarLesoes'  component={TelaListarLesoes} title='Lesões adicionadas' 
+            <Scene key='telaListarLesoes' component={TelaListarLesoes} title='Lesões adicionadas' 
                 renderLeftButton={<View/>} titleStyle={{marginLeft: margem}} 
             />
 

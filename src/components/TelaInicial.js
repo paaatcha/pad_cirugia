@@ -74,7 +74,7 @@ const estilos = StyleSheet.create ({
     },
 
     textoCadastro: {
-        fontSize: 18, 
+        fontSize: 20,  
         textAlign: 'center',
         marginTop: 20,
         fontWeight: '700',

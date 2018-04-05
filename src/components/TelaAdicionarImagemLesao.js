@@ -7,7 +7,7 @@ import { ImagePicker, Permissions } from 'expo';
 import { adicionarImg, resetarLesao } from '../actions/lesaoActions';
 import { adicionarLesaoPac } from '../actions/pacienteActions';
 
-const addImagem = require ('../../img/addImage.png');
+const addImagem = require ('../../img/addImagem.png'); 
 
 class TelaAdicionarImagemLesao extends Component {
 
@@ -59,7 +59,7 @@ class TelaAdicionarImagemLesao extends Component {
             ],
             { cancelable: false }
         )         
-    }   
+    }    
     
     _concluir = () => {
         if (this.props.lesao.imagens.length == 0){
@@ -134,15 +134,14 @@ class TelaAdicionarImagemLesao extends Component {
                 <View style={estilos.abaixo} >
                     <TouchableHighlight onPress={ this._pickImage } >
                         <View>
-                            <Image source={ addImagem } style={ estilos.imgCadastro } />
-                            <Text style={ estilos.textoImg }> Adicionar imagem </Text> 
+                            <Image source={ addImagem } style={ estilos.imgCadastro } />                            
                         </View>
                     </TouchableHighlight>
                 </View>  
 
 
                 <View style={estilos.botao}> 
-                    <Button title='Adicionar esta lesão' onPress={ this._concluir } 
+                    <Button title='Vincular lesão ao paciente' onPress={ this._concluir } 
                         color={Platform.select({ios:'#FFF'})}    
                     />                    
                 </View>           
@@ -158,7 +157,10 @@ class TelaAdicionarImagemLesao extends Component {
 const estilos = StyleSheet.create({
     tudo: {
         flex: 1,
-        padding: 20
+        padding: 20,
+        borderWidth: 1,
+        borderColor: '#999',
+        margin: 7
     },
 
     acima: {
@@ -193,8 +195,8 @@ const estilos = StyleSheet.create({
     },
 
     imgCadastro: {
-        height: 150,
-        width: 150                     
+        height: 104,
+        width: 260                     
     },
 
     imgMiniLesao: {
