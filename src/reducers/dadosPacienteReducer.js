@@ -6,7 +6,8 @@ const INITIAL_STATE = {
     anticoagulante:'',
     has: '',
     pressao_sis: '',
-    pressao_dis: ''
+    pressao_dis: '',
+    nLesoes: 0
 }
 
 export default (state = INITIAL_STATE, action) => {

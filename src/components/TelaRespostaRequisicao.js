@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, Keyboard, StyleSheet, TouchableHighlight, TextInput, Button, Image, ScrollView} from 'react-native';
+import { Text, View, Keyboard, StyleSheet, TextInput} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 import { dadosPaciente } from '../actions/dadosPacienteActions'
-
-const addLesao = require ('../../img/addLesao.png');
+import BotaoCustomizado from './BotaoCustomizado';
 
 class TelaRespostaRequisicao extends Component{
 
@@ -51,15 +50,17 @@ class TelaRespostaRequisicao extends Component{
                         <Text style={estilos.pacCampo}> Pressão arterial diastolica: 
                             <Text style={estilos.dadoCampo}> {this.props.pac.pressao_dis} </Text>                                
                         </Text>
+
+                        <Text style={estilos.pacCampo}> Nº de lesões cadastradas: 
+                            <Text style={estilos.dadoCampo}> {this.props.pac.nLesoes} </Text>                                
+                        </Text>                        
                     </View>
                 </View>
 
                 <View style={estilos.abaixo} >
-                    <TouchableHighlight onPress={ Actions.telaAdicionarLesao } >
-                        <View>
-                            <Image source={ addLesao } style={ estilos.imgAddLesao } />                            
-                        </View>
-                    </TouchableHighlight>
+                    <BotaoCustomizado comp='FontAwesome' texto='Inserir dados da lesão' tamanho={38} altura={60}
+                        icone='pencil-square-o' onPress={ Actions.telaAdicionarLesao } tamanhoFonte={14}
+                    />                
                 </View>                 
 
             </View>
@@ -81,11 +82,7 @@ const estilos = StyleSheet.create({
     },
 
     abaixo: {
-        flex: 1,
-        marginTop: 40,
-        marginBottom: 40,
-        alignItems: 'center',  
-        justifyContent: 'center' 
+        flex: 2
     },
 
     dadosLesao: {
@@ -112,8 +109,8 @@ const estilos = StyleSheet.create({
     },
 
     imgAddLesao: {
-        height: 104,
-        width: 260                     
+        height: 64,
+        width: 241                     
     },  
     
     textoImg: {

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, Keyboard, TextInput, Button, Alert, Platform} from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator, Keyboard, TextInput, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { modificaCartaoSus } from '../actions/buscaCartaoSusActions';
 import { dadosPaciente } from '../actions/dadosPacienteActions';
+import BotaoCustomizado from './BotaoCustomizado';
 
 
 class TelaBuscar extends Component{    
@@ -92,16 +93,15 @@ class TelaBuscar extends Component{
                     /> 
                 </View>
 
-            {
-                !this.state.animating &&
-                <View style={estilos.abaixo}> 
-                    <View style={estilos.botao}>
-                        <Button title='Buscar' onPress={ this.processaRequisicao } color={Platform.select({ios:'#FFF'})}
-                            disabled={this.state.botaoDesabilitar}                            
-                        />                    
-                    </View>                    
+            {                
+                !this.state.animating && 
+                <View style={estilos.abaixo}>
+                    <BotaoCustomizado comp='MaterialCommunityIcons' texto='Buscar Paciente' altura={60}
+                        icone='account-search' onPress={ this.processaRequisicao } desabilitado={this.state.botaoDesabilitar}
+                    />
+
                 </View>
-            }
+            }      
 
             {
                 this.state.animating &&
@@ -114,17 +114,13 @@ class TelaBuscar extends Component{
                         }
                     )}
                     
-                    color="#2196F3" />
+                    color="#FFF" />
                     <Text style={estilos.textoGif}> Buscando... </Text>
                 </View>
-            }                        
+            }            
 
 
-            </View>
-
-            
-
-            
+            </View>            
         );
     }
 }
@@ -144,7 +140,8 @@ const estilos = StyleSheet.create({
     },
 
     abaixo: {
-        flex: 2
+        flex: 3,
+        marginTop: 25        
     },
 
     texto: {

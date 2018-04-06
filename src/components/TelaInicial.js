@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StyleSheet, TouchableHighlight } from 'react-native';
+import { Text, View, Image, StyleSheet, TouchableHighlight, StatusBar } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 
 const cadastroPacienteImg = require ('../../img/cadastrarPaciente.png')
 
 class TelaInicial extends Component{
-        
+    
+    componentWillMount() {
+        StatusBar.setHidden(true);
+    }    
+
     render() {
         return (
             <View style={estilos.tudo} >
@@ -19,7 +23,7 @@ class TelaInicial extends Component{
                     <TouchableHighlight onPress={ Actions.telaBuscar } >
                         <View>
                             <Image source={ cadastroPacienteImg } style={ estilos.imgCadastro } />
-                            <Text style={ estilos.textoCadastro }> Adicionar lesão </Text> 
+                            <Text style={ estilos.textoCadastro }> ADICIONAR LESÃO </Text> 
                         </View>
                     </TouchableHighlight>
                 </View>                

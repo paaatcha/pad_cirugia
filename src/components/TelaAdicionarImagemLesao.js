@@ -7,7 +7,8 @@ import { ImagePicker, Permissions } from 'expo';
 import { adicionarImg, resetarLesao } from '../actions/lesaoActions';
 import { adicionarLesaoPac } from '../actions/pacienteActions';
 
-const addImagem = require ('../../img/addImagem.png'); 
+import BotaoCustomizado from './BotaoCustomizado';
+
 
 class TelaAdicionarImagemLesao extends Component {
 
@@ -47,7 +48,7 @@ class TelaAdicionarImagemLesao extends Component {
     msgFormImagem (){
         Alert.alert(
             'Atenção',
-            'Você não inseriu a imagem da lesão do paciente. Deseja continuar sem a imagem?',
+            'Você não inseriu a imagem da lesão do paciente. Apesar de não ser obrigatório é altamente desejável a inclusão da imagem. Deseja continuar sem a imagem?',
             [             
                 {text: 'Sim', onPress: () => {
                         this.props.adicionarLesaoPac(this.props.lesao);
@@ -132,19 +133,21 @@ class TelaAdicionarImagemLesao extends Component {
 
 
                 <View style={estilos.abaixo} >
-                    <TouchableHighlight onPress={ this._pickImage } >
-                        <View>
-                            <Image source={ addImagem } style={ estilos.imgCadastro } />                            
-                        </View>
-                    </TouchableHighlight>
-                </View>  
+
+                    <View style={estilos.botoes}>
+                        <BotaoCustomizado comp='Entypo' texto='Adicionar imagem' tamanho={38}
+                            icone='camera' onPress={ this._pickImage } altura={75}
+                        />
+                    </View>
+
+                    <View style={estilos.botoes}>
+                        <BotaoCustomizado comp='MaterialIcons' texto='Vincular lesão ao paciente' tamanhoFonte={12}
+                            icone='attach-file' onPress={ this._concluir } tamanho={32} altura={75}
+                        />    
+                    </View>
 
 
-                <View style={estilos.botao}> 
-                    <Button title='Vincular lesão ao paciente' onPress={ this._concluir } 
-                        color={Platform.select({ios:'#FFF'})}    
-                    />                    
-                </View>           
+                </View>       
                 
                 
                 
@@ -177,16 +180,17 @@ const estilos = StyleSheet.create({
         backgroundColor: '#d9d9d9'
     },
 
+    botoes: {
+        marginBottom: 25
+    },
+
     titulo:{
         fontSize: 17,        
         fontWeight: 'bold'
     },
 
     abaixo: {            
-        marginTop: 40,
-        marginBottom: 40,
-        alignItems: 'center', 
-        justifyContent: 'center'        
+        marginTop: 40,       
     },
 
     texto: {

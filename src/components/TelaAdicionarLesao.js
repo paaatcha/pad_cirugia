@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import { alterarRegiao, alterarDiaMaior, alterarDiaMenor, 
     alterarDiagnostico, alterarProcedimento, alterarObs } from '../actions/lesaoActions';
 
+import BotaoCustomizado from './BotaoCustomizado';
+    
+
 class TelaAdicionarLesao extends Component {
 
     constructor (props){
@@ -118,15 +121,16 @@ class TelaAdicionarLesao extends Component {
                                 <TextInput style={ estilos.inputs} value={this.props.lesao.obs} 
                                     onChangeText={ texto => this.props.alterarObs(texto) }
                                     ref={(ref) => this.obsRef=ref}
-                                    blurOnSubmit={false}                            
+                                    blurOnSubmit={false}   
+                                    onSubmitEditing={ this.processaEntradas }                         
                                 />                                                                                          
                             </View>
                         </View>
 
                         <View style={estilos.abaixo}>
-                            <View style={estilos.botao}> 
-                                <Button title='Adicionar lesão' onPress={ this.processaEntradas } color={Platform.select({ios:'#FFF'})} />                    
-                            </View> 
+                            <BotaoCustomizado comp='FontAwesome' texto='Adicionar lesão' tamanho={30}
+                                icone='plus' onPress={ this.processaEntradas } 
+                             />
                         </View>
 
                     </View>
@@ -153,7 +157,8 @@ const estilos = StyleSheet.create({
     },
 
     abaixo: {  
-        flex: 1       
+        flex: 1,              
+        marginTop: 25
     },
 
     texto: {

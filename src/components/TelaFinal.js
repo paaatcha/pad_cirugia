@@ -3,10 +3,10 @@ import { Text, View, StyleSheet, TextInput, Button, Alert, Image, Platform} from
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { Octicons } from '@expo/vector-icons';
 
 import { resetarPaciente } from '../actions/pacienteActions';
-
-const imgSucesso = require ('../../img/sucesso.png');
+import BotaoCustomizado from './BotaoCustomizado';
 
 class TelaFinal extends Component{   
     
@@ -14,14 +14,19 @@ class TelaFinal extends Component{
         return(
             <View style={estilos.tudo} >                
                 
-                <View style={estilos.acima}>
-                    <Image style={estilos.imgSucesso} source={imgSucesso} />
+                <View style={estilos.acima}>                    
+                    <Octicons name='smiley' size={200} color='#4d79ff' style={estilos.imgSucesso} />
                     <Text style={ estilos.textoImg }> Inclusão realizada com sucesso </Text>  
                 </View>
 
+                
                 <View style={estilos.abaixo}>
-                    <Button title='Voltar para tela inicial' onPress={ Actions.telaInicial } color={Platform.select({ios:'#FFF'})} />
+                <BotaoCustomizado comp='MaterialCommunityIcons' texto='Voltar para tela inicial' 
+                        icone='keyboard-backspace' onPress={ Actions.telaInicial } altura={60}
+                />
                 </View>
+                    
+                
                 
             </View>
         );
@@ -31,43 +36,36 @@ class TelaFinal extends Component{
 const estilos = StyleSheet.create({
     tudo: {
         flex: 1,
-        padding: 20,
-        alignItems: 'center',
+        padding: 20,        
         justifyContent: 'center',
         borderWidth: 1,
-        borderColor: '#3596DB',
+        borderColor: '#4d79ff',
         margin: 20,
         marginTop: 45
         
     },
 
     acima: {        
-        flex: 4,
+        flex: 7,
         alignItems: 'center',
-        justifyContent: 'center'       
+        //justifyContent: 'center'       
     },
 
     abaixo: {  
-        flex: 1,
-        width: '100%',
-        
-        ...Platform.select({
-            ios: {
-                backgroundColor: '#3596DB'                
-            }
-        })        
+        flex: 2,      
     },
 
     imgSucesso: {
-        height: 195,
-        width: 195                     
+        //height: 195,
+        //width: 195                     
     },
        
     textoImg: {
-        fontSize: 17, 
+        fontSize: 20, 
         textAlign: 'center',        
         fontWeight: '700',
-        color: '#3596DB'
+        color: '#4d79ff',
+        marginTop: 15
 
     }
 

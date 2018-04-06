@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Image, StyleSheet, ActivityIndicator, TouchableHighlight, TextInput, Button, Alert, Platform} from 'react-native';
+import { Text, View, ScrollView, Image, StyleSheet, ActivityIndicator, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -8,9 +8,7 @@ import { resetarPaciente } from '../actions/pacienteActions';
 
 import { resetarCartaoSus } from '../actions/buscaCartaoSusActions';
 
-const addLesao = require ('../../img/addNovaLesao.png');
-const uploadLesao = require ('../../img/UploadLesao.png');
-
+import BotaoCustomizado from './BotaoCustomizado';
 
 
 class TelaListarLesoes extends Component {
@@ -26,6 +24,7 @@ class TelaListarLesoes extends Component {
             'O envio dos dados será iniciado. O tempo de envio pode levar alguns segundos e varia de acordo com o número de lesões e imagens adicionadas.',
             [             
                 {text: 'OK', onPress: () => this._finalizarAplicacao() },
+                {text: 'Cancelar', onPress: () => console.log("EnvioCancelado") },
             ],
             { cancelable: false }
         )  
@@ -165,17 +164,19 @@ class TelaListarLesoes extends Component {
                 </View>
 
                 <View style={estilos.abaixo} >
-                    <TouchableHighlight onPress={ Actions.telaAdicionarLesao } >
-                        <View>
-                            <Image source={ addLesao } style={ estilos.imgCadastro } />                            
-                        </View>
-                    </TouchableHighlight>
 
-                    <TouchableHighlight onPress={ this._iniciaEnvio } >
-                        <View>
-                            <Image source={ uploadLesao } style={ estilos.imgCadastro } />                            
-                        </View>
-                    </TouchableHighlight>                    
+                    <View style={estilos.botoes}>
+                        <BotaoCustomizado comp='FontAwesome' texto='Adicionar nova lesão' tamanho={38}
+                            icone='plus' onPress={ Actions.telaAdicionarLesao } altura={75}
+                        />
+                    </View>
+
+                    <View style={estilos.botoes}>
+                        <BotaoCustomizado comp='FontAwesome' texto='Enviar lesões cadastradas' tamanhoFonte={14}
+                            icone='send' onPress={ this._iniciaEnvio } tamanho={32} altura={75}
+                        />    
+                    </View>                    
+
                 </View>   
 
            
@@ -233,10 +234,7 @@ const estilos = StyleSheet.create({
     },
 
     abaixo: {            
-        marginTop: 40,
-        marginBottom: 40,
-        alignItems: 'center',  
-        justifyContent: 'center'        
+        marginTop: 25       
     },
 
     texto: {
@@ -275,6 +273,10 @@ const estilos = StyleSheet.create({
             }
         })        
     },
+
+    botoes: {
+        marginBottom: 25
+    },    
 
     pacCampo: {
         fontSize: 14,        
