@@ -30,7 +30,7 @@ class TelaListarLesoes extends Component {
         )  
     } 
 
-    _msgInicioEnvio = () => {
+    _msgFalhaEnvio = () => {
         Alert.alert(
             'Falha no envio dos dados',
             'Ocorreu uma falha ao enviar os dados para o servidor. Verifique se você está conectado na rede PADUFES e se seu 3G está desligado. Após a verificação, tente novamente.',
