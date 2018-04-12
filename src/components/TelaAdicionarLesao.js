@@ -58,7 +58,7 @@ class TelaAdicionarLesao extends Component {
 
         return (
             
-            <ScrollView>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <KeyboardAvoidingView  behavior='padding'>                                 
 
                     <View style={estilos.tudo}>

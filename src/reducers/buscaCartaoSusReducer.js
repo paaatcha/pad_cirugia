@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-    cartaoSus: '111-1111-1111-1111'    
+    cartaoSus: ''    
 } 
 
 export default (state = INITIAL_STATE, action) => {

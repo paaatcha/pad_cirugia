@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, Image, StyleSheet, ActivityIndicator, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 
 import { resetarPaciente } from '../actions/pacienteActions';
 
@@ -42,14 +42,18 @@ class TelaListarLesoes extends Component {
     }    
 
     _finalizarAplicacao = async () => {   
-
+        let source = CancelToken.source();
         let lesoes = this.props.pac.lesoes;
-        let urlPost = 'http://172.20.75.18:8080//APIrequisicoes/paciente/cadastrarLesoes/' + this.props.cartaoSus;  
+        let urlPost = 'http://192.168.1.99:8080//APIrequisicoes/paciente/cadastrarLesoes/' + this.props.cartaoSus;  
         let okEnvio = false; 
         
         this.setState({
             animating: true            
         });
+
+        setTimeout(() => {
+            source.cancel();
+        },30000);
 
        for(let i=0; i<lesoes.length; i++){
             let les = lesoes[i];             
@@ -78,7 +82,10 @@ class TelaListarLesoes extends Component {
                 method: 'post', 
                 url: urlPost,
                 data: dados,
-                config: {'Content-Type': 'multipart/form-data'}
+                config: {
+                    'Content-Type': 'multipart/form-data',
+                    'cancelToken': 'source.token'
+                }
             })
             .then(response => {
                 console.log(response.status);                  
@@ -138,11 +145,11 @@ class TelaListarLesoes extends Component {
                             <Text style={estilos.pacCampo}> Imagens: 
                                 <Text style={estilos.dadoCampo}> {lesao.imagens.length} </Text>
                             </Text> 
-                                <View style={estilos.exibirImagens}>                            
+                                <ScrollView contentContainerStyle={estilos.exibirImagens}>                            
                                     {
                                         imagensExibir
                                     }
-                                </View>
+                                </ScrollView>
 
                         </View>
             );
@@ -150,7 +157,9 @@ class TelaListarLesoes extends Component {
         
         return (
             
-            <ScrollView style={estilos.tudo} >    
+            <ScrollView style={estilos.tudo} > 
+            <View style={estilos.tudoView}>
+
 
                 <View style={estilos.acima}>                  
 
@@ -196,6 +205,7 @@ class TelaListarLesoes extends Component {
                     </View>
                 }  
 
+            </View>
 
             </ScrollView>
             
@@ -204,8 +214,7 @@ class TelaListarLesoes extends Component {
 }
 
 const estilos = StyleSheet.create({
-    tudo: {
-        flex: 1,
+    tudo: {        
         padding: 10,
         borderWidth: 1,
         borderColor: '#999',
@@ -213,8 +222,12 @@ const estilos = StyleSheet.create({
                
     },
 
+    tudoView:{
+        flex: 1
+    },
+
     acima: {
-        flex: 1       
+              
     },
 
     dadosLesao: {
@@ -251,7 +264,8 @@ const estilos = StyleSheet.create({
     imgMiniLesao: {
         height: 75,
         width: 75,
-        marginRight: 5
+        marginRight: 5,
+        marginTop: 5
     },
     
     textoImg: {
@@ -290,7 +304,8 @@ const estilos = StyleSheet.create({
     },
     
     exibirImagens: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        flexWrap: 'wrap'
     },
 
     gifEspera: {

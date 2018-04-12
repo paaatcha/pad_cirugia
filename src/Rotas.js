@@ -36,7 +36,7 @@ export default Rotas = (props) => {
             
         > 
             <Scene key='root'>
-                <Scene key='telaInicial' component={TelaInicial} hideNavBar={true} />
+                <Scene key='telaInicial' component={TelaInicial} hideNavBar={true} type={ActionConst.RESET}/>
 
                 <Scene key='telaBuscar' component={TelaBuscar} title='Buscar paciente' />
 

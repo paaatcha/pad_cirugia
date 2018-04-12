@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator, Keyboard, TextInput, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 
 import { modificaCartaoSus } from '../actions/buscaCartaoSusActions';
 import { dadosPaciente } from '../actions/dadosPacienteActions';
@@ -24,13 +24,18 @@ class TelaBuscar extends Component{
     }
 
     async processaRequisicao (){
-        let url = 'http://172.20.75.18:8080/APIrequisicoes/paciente/' + this.props.cartaoSus;
+        let source = CancelToken.source();
+        let url = 'http://192.168.1.99:8080/APIrequisicoes/paciente/' + this.props.cartaoSus;
 
         console.log(url);
         Keyboard.dismiss();
         this.setState({animating: true});
 
-        await axios.get(url)
+        setTimeout(() => {
+            source.cancel();
+        },5000);
+
+        await axios.get(url, {cancelToken: source.token})
         .then( response => {            
             this.props.dadosPaciente(response.data);            
 

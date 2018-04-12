@@ -118,11 +118,11 @@ class TelaAdicionarImagemLesao extends Component {
                         <Text style={estilos.pacCampo}> Imagens: 
                             <Text style={estilos.dadoCampo}> {this.props.lesao.imagens.length} </Text>
                         </Text>  
-                        <View style={estilos.exibirImagens}>
+                        <ScrollView contentContainerStyle={estilos.exibirImagens}>
                             { 
                                 imagensExibir 
                             }
-                        </View>
+                        </ScrollView> 
                         
                         
                                         
@@ -206,7 +206,8 @@ const estilos = StyleSheet.create({
     imgMiniLesao: {
         height: 75,
         width: 75,
-        marginRight: 5
+        marginRight: 5,
+        marginTop: 5
     },
     
     textoImg: {
@@ -240,7 +241,8 @@ const estilos = StyleSheet.create({
     },
     
     exibirImagens: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        flexWrap: 'wrap'
     }
     
 
