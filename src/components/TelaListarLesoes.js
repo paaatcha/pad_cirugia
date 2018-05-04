@@ -237,7 +237,7 @@ const estilos = StyleSheet.create({
         borderTopColor: 'black',
         borderTopWidth: 1,
         paddingTop: 3,
-        marginTop: 2, 
+        marginTop: 7, 
         backgroundColor: '#d9d9d9'         
     },
 

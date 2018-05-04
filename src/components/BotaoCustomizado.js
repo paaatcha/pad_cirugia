@@ -7,6 +7,7 @@ export default BotaoCustomizado = (props) => {
     
         //this.props.funcaoOnpress
         let cor = props.cor || '#FFF';
+        let corFundo = props.corFundo || '#4d79ff';
         let altura = props.altura || 40;
         let tamanho = props.tamanho || 40;
         let tamanhoFonte = props.tamanhoFonte || 16;
@@ -19,12 +20,12 @@ export default BotaoCustomizado = (props) => {
         let compOcticons = props.comp == 'Octicons';
         
         return(
-            <TouchableHighlight onPress={ props.onPress } disabled={ desabilitado }>
+            <TouchableHighlight onPress={ props.onPress } disabled={ desabilitado } style={props.style}>
                 <View style={
                         {
                             flexDirection: 'row',              
                             alignItems: 'center',
-                            backgroundColor: desabilitado ? '#CCC' : '#4d79ff',
+                            backgroundColor: desabilitado ? '#CCC' : corFundo,
                             height: altura,
                             borderRadius: 5
                         }                    

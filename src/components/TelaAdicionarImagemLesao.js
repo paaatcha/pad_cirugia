@@ -16,13 +16,15 @@ class TelaAdicionarImagemLesao extends Component {
         image: null,
         image64: null,
         hasCameraPermission: null,
-        seguirSemImg: false        
+        seguirSemImg: false,
+        imagemSelecionada: null        
     };
 
     async componentWillMount(){
         Keyboard.dismiss();
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasCameraPermission: status === 'granted' });
+        const { status2 } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        this.setState({ hasCameraPermission: status === 'granted' && status2 === 'granted'});
     }
 
     _pickImage = async () => {
@@ -44,6 +46,26 @@ class TelaAdicionarImagemLesao extends Component {
           console.log(result);
         }
     }; 
+
+    _pickImageAlbum = async () => {
+        // CHECAR QUESTÃO DA PERMISSÃO
+        const result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 4],
+            base64: false,
+            quality: 1,
+            exif: true,
+        });
+
+        //console.log(result);
+        if (!result.cancelled) {
+            this.setState({ image: result.uri });
+            this.setState({ image64: result.base64 });
+  
+            this.props.adicionarImg(result);
+            //console.log(result);
+        }
+    };    
 
     msgFormImagem (){
         Alert.alert(
@@ -91,6 +113,15 @@ class TelaAdicionarImagemLesao extends Component {
                     <Text style={estilos.titulo}> Dados da lesão </Text>
 
                     <View style={estilos.dadosLesao}> 
+
+                        
+                        <BotaoCustomizado 
+                            comp='FontAwesome' texto='  ' tamanho={60} tamanhoFonte={10}
+                            icone='edit' onPress={Actions.telaAdicionarLesao} altura={60}
+                            corFundo='#d9d9d9' cor='#000'
+                        />
+                        
+
                         <Text style={estilos.pacCampo}> Região: 
                             <Text style={estilos.dadoCampo}> {this.props.lesao.regiao.toUpperCase()} </Text>
                         </Text>                
@@ -118,6 +149,7 @@ class TelaAdicionarImagemLesao extends Component {
                         <Text style={estilos.pacCampo}> Imagens: 
                             <Text style={estilos.dadoCampo}> {this.props.lesao.imagens.length} </Text>
                         </Text>  
+
                         <ScrollView contentContainerStyle={estilos.exibirImagens}>
                             { 
                                 imagensExibir 
@@ -135,8 +167,14 @@ class TelaAdicionarImagemLesao extends Component {
                 <View style={estilos.abaixo} >
 
                     <View style={estilos.botoes}>
-                        <BotaoCustomizado comp='Entypo' texto='Adicionar imagem' tamanho={38}
+                        <BotaoCustomizado comp='Entypo' texto='Tirar foto' tamanho={38}
                             icone='camera' onPress={ this._pickImage } altura={75}
+                        />
+                    </View>
+
+                    <View style={estilos.botoes}>
+                        <BotaoCustomizado  comp='FontAwesome' texto='Selecionar do álbum' tamanho={38}
+                            icone='file-photo-o' onPress={this._pickImageAlbum} altura={75}
                         />
                     </View>
 

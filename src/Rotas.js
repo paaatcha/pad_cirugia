@@ -46,7 +46,7 @@ export default Rotas = (props) => {
                     titleStyle={{marginLeft: margem}} 
                 />
 
-                <Scene key='telaAdicionarImagemLesao'  component={TelaAdicionarImagemLesao} title='Adicionar imagem' 
+                <Scene key='telaAdicionarImagemLesao' initial  component={TelaAdicionarImagemLesao} title='Adicionar imagem' 
                     titleStyle={{marginLeft: margem}} 
                     backTitle=" " 
                 />

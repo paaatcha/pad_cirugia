@@ -5,6 +5,12 @@
     "icon": "./img/iconPAD.png",
     "name": "PAD Cirurgia",
     "slug": "pad_cirurgia",
-    "description": "App para inclusão de lesões dos pacientes que são submetidos a cirurgia no PAD"    
+    "description": "Aplicativo para gerenciamento das lesões que vão para cirurgia do Programa de Assistência Dermatológica - UFES",  
+    "ios": {
+      "bundleIdentifier": "ufes.pad.cirurgia"
+    },
+    "android": {
+      "package": "ufes.pad.cirurgia"
+    }  
   }
 }
