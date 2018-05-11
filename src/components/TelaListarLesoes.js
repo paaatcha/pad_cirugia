@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Image, StyleSheet, ActivityIndicator, TextInput, Button, Alert, Platform} from 'react-native';
+import { Text, View, ScrollView, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, TouchableHighlight, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios, { CancelToken } from 'axios';
@@ -15,9 +15,17 @@ class TelaListarLesoes extends Component {
  
     state = {
         animating: false,
-        andamento: ''
-    }
+        andamento: '',    
+        lesoesPacientes: [],
+        imagesLesao: [],
+        lesaoAtual: 0,
+        imagemSelecionada: null,
+        lesaoSelecionada: null,
+        edicao: false,
+        regiao: ''
+    }    
 
+    
     _iniciaEnvio = () => {
         Alert.alert(
             'Enviando as lesões para o banco de dados',
@@ -99,10 +107,52 @@ class TelaListarLesoes extends Component {
             this.props.resetarPaciente();
             this.props.resetarCartaoSus();        
             Actions.telaFinal ();        
-        } 
+        }
+    }
 
-        
+    _proxLesao = () =>{
+        numLes = this.props.pac.lesoes.length;
+        les = this.state.lesaoAtual;
+        if (les < numLes-1){
+            les++;
+            this.setState({lesaoAtual: les});
+        }
+    }
 
+    _antLesao = () =>{
+        les = this.state.lesaoAtual;
+        if (les > 0){
+            les--;
+            this.setState({lesaoAtual: les});
+        }
+    }
+
+    _removerImagem = () => {
+        this.props.pac.lesoes[this.state.lesaoAtual].imagens.splice(this.state.imagemSelecionada,1);
+        this.setState({imagemSelecionada: null});
+    }
+
+    _removerLesao = () => {
+        this.props.pac.lesoes.splice(this.state.lesaoAtual,1);
+        this.setState({lesaoAtual: 0});
+    }
+
+    _msgRemoverLesao = () => {
+        Alert.alert(
+            'Removendo lesão',
+            'Tem certeza que deseja remover essa lesão?',
+            [             
+                {text: 'Sim', onPress: this._removerLesao },
+                {text: 'Não', onPress: () => console.log("Remocao cancelada") },
+            ],
+            { cancelable: false }
+        )  
+    } 
+    
+    _altRegiao = (texto) => {
+        les = this.state.lesaoEdicao
+        les.regiao = texto
+        this.setState({lesaoEdicao: les})
     }
 
     render(){
@@ -113,7 +163,15 @@ class TelaListarLesoes extends Component {
             let imagensExibir = [];
 
             for (let k=0; k<lesao.imagens.length; k++){
-                imagensExibir.push(<Image key={ lesao.imagens[k].uri } source={ lesao.imagens[k] } style={estilos.imgMiniLesao} />);
+                imagensExibir.push(
+                    <TouchableHighlight key={lesao.imagens[k].uri}                 
+                        onLongPress={() => this.setState({ imagemSelecionada: k})} 
+                        style={{marginRight: 5, marginTop: 5, marginBottom: 5}}
+                    >
+                        <Image source={ lesao.imagens[k] } style={estilos.imgMiniLesao} />
+
+                    </TouchableHighlight>
+                );
             }
 
             lesoesPacientes.push(
@@ -151,44 +209,172 @@ class TelaListarLesoes extends Component {
                                     }
                                 </ScrollView>
 
+                            <View style={estilos.viewBotaoEditar}>
+                                <View style={{ width: '49%'}}>
+                                    <BotaoCustomizado 
+                                        comp='FontAwesome' texto='Editar Lesão' tamanho={20} tamanhoFonte={13}
+                                        icone='edit' onPress={() => this.setState({ lesaoSelecionada: i, editar: true })} altura={28}
+                                        corFundo='#999999' 
+                                    />
+                                </View>
+
+                                <View style={{ width: '49%'}}>
+                                    <BotaoCustomizado 
+                                        comp='FontAwesome' texto='Excluir Lesão' tamanho={20} tamanhoFonte={13}
+                                        icone='trash-o' onPress={ this._msgRemoverLesao } altura={28}
+                                        corFundo='#d10202' 
+                                    />
+                                </View>                                 
+                            </View>
+
+                            {
+                                this.state.imagemSelecionada !== null &&
+                            
+                                <View style={estilos.viewExcluirImagem} >
+                                    <Image source={ this.props.pac.lesoes[this.state.lesaoAtual].imagens[this.state.imagemSelecionada] } style={estilos.imgSelecionada} />                                
+                                    
+                                    <View style={estilos.viewBotoesExcluirImagem} >
+                                
+                                        <View style={{ width: '33%', marginRight: 10 }}>
+                                        
+                                            <BotaoCustomizado comp='MaterialIcons' texto='Excluir' tamanhoFonte={10}
+                                            icone='delete' onPress={ this._removerImagem } 
+                                            tamanho={25} altura={30} corFundo='#d10202'/>
+                                        </View>
+                                        
+                                        <View style={{ width: '33%', marginLeft: 10 }}>
+                                            <BotaoCustomizado comp='FontAwesome' texto='Cancelar' tamanhoFonte={10}
+                                            icone='close' onPress={() => this.setState({ imagemSelecionada: null })}
+                                            tamanho={25} altura={30} />
+                                        </View>
+                                    </View>                        
+                                </View>
+                            }   
+                            
+
                         </View>
             );
+        }
+
+        let reg;
+        if (this.state.editar){
+            reg = this.props.pac.lesoes[this.state.lesaoAtual].regiao;
+            //this.setState({regiao: reg});
+            //console.log(this.state.regiao);
         }
         
         return (
             
-            <ScrollView style={estilos.tudo} > 
-            <View style={estilos.tudoView}>
+            <ScrollView style={estilos.tudo} keyboardShouldPersistTaps='handled'> 
+                {
+                    !this.state.editar &&
+                    <View>                                           
+
+                        {
+                            this.props.pac.lesoes.length > 0 ?
+                            <View>
+                                <Text style={estilos.titulo}> Lesões adicionadas ao paciente: 
+                                    <Text style={estilos.dadoCampo}> {this.props.pac.lesoes.length} </Text>
+                                </Text>                        
+                                <Text style={estilos.titulo2}> Exibindo lesão:
+                                    <Text style={estilos.dadoCampo}> {this.state.lesaoAtual+1} </Text>
+                                </Text>
+                            </View>
+                            :
+                            <View>
+                                <Text style={estilos.titulo}> NENHUMA LESÃO ADICIONADA </Text>
+                                <Text style={estilos.msgTexto}> Você deve ter apagado todas as lesões. Adicione alguma lesão para continuar </Text>
+                            </View>
+                        }
+
+                        {
+                            lesoesPacientes[this.state.lesaoAtual]
+                        }
+
+                        {
+                            this.state.imagemSelecionada == null && this.props.pac.lesoes.length > 0 &&                        
+                            <View style={estilos.viewBotoesVerLesoes} >                            
+                                <View style={{ width: '45%', marginRight: 10 }}>
+                                
+                                    <BotaoCustomizado comp='Entypo' texto='Anterior' tamanhoFonte={13}
+                                    icone='arrow-bold-left' onPress={this._antLesao}
+                                    tamanho={22} altura={30} corFundo='#999999' />
+                                </View>
+                                
+                                <View style={{ width: '45%', marginLeft: 10 }}>
+                                    <BotaoCustomizado comp='Entypo' texto='Próxima' tamanhoFonte={13}
+                                    icone='arrow-bold-right' onPress={this._proxLesao} posIcon='D'
+                                    tamanho={22} altura={30} corFundo='#999999' />
+                                </View>
+                            </View>
+                        }
 
 
-                <View style={estilos.acima}>                  
+                        <View style={estilos.abaixo} >
 
-                    <Text style={estilos.titulo}> Lesões adicionadas ao paciente: </Text>
+                            <View style={estilos.botoes}>
+                                <BotaoCustomizado comp='FontAwesome' texto='Adicionar nova lesão' tamanho={38}
+                                    icone='plus' onPress={ Actions.telaAdicionarLesao } altura={75}
+                                />
+                            </View>
 
-                    {
-                        lesoesPacientes
-                    }
-                                     
+                            <View style={estilos.botoes}>
+                                <BotaoCustomizado comp='FontAwesome' texto='Enviar lesões cadastradas' tamanhoFonte={14}
+                                    icone='send' onPress={ this._iniciaEnvio } tamanho={32} altura={75} desabilitado={this.props.pac.lesoes.length == 0}
+                                />    
+                            </View>                    
 
-                </View>
+                        </View>                       
+  
+                    </View> 
+                }      
 
-                <View style={estilos.abaixo} >
+                {
+                    this.state.editar &&
+                    <KeyboardAvoidingView  behavior='padding'>
+                        <Text style={estilos.titulo}> Editando lesão: 
+                            <Text style={estilos.dadoCampo}> {this.state.lesaoSelecionada} </Text>
+                        </Text>
 
-                    <View style={estilos.botoes}>
-                        <BotaoCustomizado comp='FontAwesome' texto='Adicionar nova lesão' tamanho={38}
-                            icone='plus' onPress={ Actions.telaAdicionarLesao } altura={75}
-                        />
-                    </View>
+                        {
+                        <View>
+                            <Text style={estilos.texto}> Região: </Text>                
+                            <TextInput  style={ estilos.inputs} value={reg} 
+                                
+                                
+                                blurOnSubmit={false}
+                            /> 
+                        </View>
+                        }
 
-                    <View style={estilos.botoes}>
-                        <BotaoCustomizado comp='FontAwesome' texto='Enviar lesões cadastradas' tamanhoFonte={14}
-                            icone='send' onPress={ this._iniciaEnvio } tamanho={32} altura={75}
-                        />    
-                    </View>                    
 
-                </View>   
 
-           
+                        <View >
+
+                            <View style={estilos.viewBotoesCamera} >
+                                <View style={{ width: '49%'}}>
+                                    <BotaoCustomizado comp='Entypo' texto='Camera' tamanho={20}
+                                        icone='camera' onPress={ () => false } altura={45} tamanhoFonte={14}
+                                    />
+                                </View>
+
+                                <View style={{ width: '49%'}}>
+                                    <BotaoCustomizado  comp='FontAwesome' texto='Albúm' tamanho={20}
+                                        icone='file-photo-o' onPress={() => false} altura={45} tamanhoFonte={14}
+                                    />
+                                </View>
+                            </View>
+
+                            <View style={estilos.botoes}>
+                                <BotaoCustomizado comp='FontAwesome' texto='Concluir' tamanho={20}
+                                    icone='check' onPress={ () => this.setState({editar: false}) } altura={45} tamanhoFonte={14}
+                                />    
+                            </View>
+                        </View>
+
+                    </KeyboardAvoidingView>                    
+                }
+
                 {
                     this.state.animating &&
                     <View style={estilos.gifEspera}>
@@ -203,10 +389,8 @@ class TelaListarLesoes extends Component {
                         color="#FFF" />
                         <Text style={estilos.textoGif}> Enviando {this.state.andamento} </Text>
                     </View>
-                }  
-
-            </View>
-
+                }                           
+ 
             </ScrollView>
             
         );
@@ -220,14 +404,6 @@ const estilos = StyleSheet.create({
         borderColor: '#999',
         margin: 7,
                
-    },
-
-    tudoView:{
-        flex: 1
-    },
-
-    acima: {
-              
     },
 
     dadosLesao: {
@@ -246,13 +422,32 @@ const estilos = StyleSheet.create({
         fontWeight: 'bold'
     },
 
+    titulo2:{
+        fontSize: 14,        
+        fontWeight: 'bold',
+        color: '#074fc1'
+    },    
+
+    msgTexto:{
+        fontSize: 16,                
+        color: '#074fc1',
+        textAlign: 'center',
+        marginTop: 15
+    },
+
     abaixo: {            
-        marginTop: 25       
+        marginTop: 20       
     },
 
     texto: {
         fontSize: 15,
         fontWeight: '700'       
+    },
+
+    viewBotoesCamera: {
+        flexDirection: 'row',         
+        justifyContent: 'space-between',
+        marginBottom: 15        
     },
 
     imgCadastro: {
@@ -264,8 +459,7 @@ const estilos = StyleSheet.create({
     imgMiniLesao: {
         height: 75,
         width: 75,
-        marginRight: 5,
-        marginTop: 5
+        backgroundColor: '#d9d9d9'           
     },
     
     textoImg: {
@@ -276,18 +470,7 @@ const estilos = StyleSheet.create({
         marginTop: 15
 
     },
-
-    botao: {
-        marginBottom: 50,
-        marginTop: 20,
-
-        ...Platform.select({
-            ios: {
-                backgroundColor: '#3596DB'                
-            }
-        })        
-    },
-
+    
     botoes: {
         marginBottom: 25
     },    
@@ -305,7 +488,8 @@ const estilos = StyleSheet.create({
     
     exibirImagens: {
         flexDirection: 'row',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        paddingLeft: 3
     },
 
     gifEspera: {
@@ -325,7 +509,67 @@ const estilos = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FFF',
         marginTop: 10
-    }    
+    },
+
+    viewBotoesVerLesoes: {
+        flexDirection: 'row', 
+        marginTop: 5, 
+        marginBottom: 5,
+        justifyContent: 'space-between',
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        paddingBottom: 3,
+        paddingRight: 5,
+        paddingLeft: 5
+    },
+
+    viewBotaoEditar:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 0,
+        padding: 5,
+        borderTopColor: 'black',
+        borderTopWidth: 1,
+        paddingBottom: 3,
+        backgroundColor: '#d9d9d9'
+    },   
+
+    viewExcluirImagem: {
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        zIndex: 10,
+        position: 'absolute',
+        backgroundColor: '#d9d9d9',
+        justifyContent: 'center',
+        alignItems: 'center'               
+    },
+
+    imgSelecionada: {
+        alignSelf: 'center',
+        height: 200,
+        width: 200,
+    },
+    
+    viewBotoesExcluirImagem: {
+        flexDirection: 'row', 
+        marginTop: 15, 
+        justifyContent: 'center'
+    },
+
+    inputs: {
+        fontSize: 16,
+        height: 35,
+        marginBottom: 3,
+        ...Platform.select({
+            ios: {
+                backgroundColor: '#d9d9d9',
+                marginBottom: 8
+            }
+        })       
+    }
+
 
 });
 

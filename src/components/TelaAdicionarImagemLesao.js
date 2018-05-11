@@ -140,10 +140,9 @@ class TelaAdicionarImagemLesao extends Component {
 
         for (let i=0; i<this.props.lesao.imagens.length; i++){
             imagensExibir.push(
-                <TouchableHighlight key={this.props.lesao.imagens[i].uri} onLongPress={() => this._selecionarImagem(i)} style={{marginRight: 5}}>
+                <TouchableHighlight key={this.props.lesao.imagens[i].uri} onLongPress={() => this._selecionarImagem(i)} style={{marginRight: 5, marginBottom: 5}}>
                     
-                    <Image source={ this.props.lesao.imagens[i] } style={estilos.imgMiniLesao} />
-                    
+                    <Image source={ this.props.lesao.imagens[i] } style={estilos.imgMiniLesao} />                    
                 
                 </TouchableHighlight>
 
@@ -153,199 +152,192 @@ class TelaAdicionarImagemLesao extends Component {
 
         return (
             
-            <ScrollView style={estilos.tudo} >                                
+            <ScrollView style={estilos.tudo} keyboardShouldPersistTaps='handled'>                                
                  
-                <ScrollView>
-                
-                    {
-                        !this.state.editar ?
-                        <Text style={estilos.titulo}> Dados da lesão </Text>
-                        :
-                        <Text style={estilos.titulo}> Editando lesão </Text>
-                    }
-                    
-                    <View style={estilos.dadosLesao}> 
-                    { 
-                        !this.state.editar && 
-                        <View>
-                            <Text style={estilos.pacCampo}> Região: 
-                                <Text style={estilos.dadoCampo}> {this.props.lesao.regiao.toUpperCase()} </Text>
-                            </Text>                
-
-                            <Text style={estilos.pacCampo}> Diâmetro maior (mm): 
-                                <Text style={estilos.dadoCampo}> {this.props.lesao.diaMaior} </Text>   
-                            </Text>                
-
-                            <Text style={estilos.pacCampo}> Diâmetro menor (mm): 
-                                <Text style={estilos.dadoCampo}> {this.props.lesao.diaMenor} </Text>                    
-                            </Text>
+                { 
+                    !this.state.editar && 
+                    <View>
+                        <ScrollView>                                 
                             
-                            <Text style={estilos.pacCampo}> Diagnóstico: 
-                                <Text style={estilos.dadoCampo}> {this.props.lesao.diagnostico.toUpperCase()} </Text>                                               
-                            </Text>                
-
-                            <Text style={estilos.pacCampo}> Procedimento:
-                                <Text style={estilos.dadoCampo}> {this.props.lesao.procedimento.toUpperCase()} </Text>                 
-                            </Text>              
-
-                            <Text style={estilos.pacCampo}> Observação:
-                                <Text style={estilos.dadoCampo}> {this.props.lesao.obs.toUpperCase()} </Text>
-                            </Text>  
-
-                            <Text style={estilos.pacCampo}> Imagens: 
-                                <Text style={estilos.dadoCampo}> {this.props.lesao.imagens.length} </Text>
-                            </Text>  
-
-                            <ScrollView contentContainerStyle={estilos.exibirImagens}>
-                                {                                
-                                    imagensExibir 
-                                }
-                            </ScrollView> 
-
-                            <View style={{marginTop: 0, padding: 5}}>
-                                <BotaoCustomizado 
-                                    comp='FontAwesome' texto='Editar' tamanho={20} tamanhoFonte={13}
-                                    icone='edit' onPress={() => this.setState({ editar: true })} altura={28}
-                                    corFundo='#999999' cor='#000' 
-                                />
-                            </View>
-
-                        </View>
-                        
-                        }
-
-                        {
-                            this.state.imagemSelecionada !== null && 
-                            <View style={estilos.excluirImagem} >
-                                <Image source={ this.props.lesao.imagens[this.state.imagemSelecionada] } style={estilos.imgSelecionada} />                                
-                                
-                                <View style={estilos.viewBotoesExcluirImagem} >
+                            <Text style={estilos.titulo}> Dados da lesão </Text>
                             
-                                    <View style={{ width: '33%', marginRight: 10 }}>
+                            <View style={estilos.dadosLesao}> 
+                            
+                                <View>
+                                    <Text style={estilos.pacCampo}> Região: 
+                                        <Text style={estilos.dadoCampo}> {this.props.lesao.regiao.toUpperCase()} </Text>
+                                    </Text>                
+
+                                    <Text style={estilos.pacCampo}> Diâmetro maior (mm): 
+                                        <Text style={estilos.dadoCampo}> {this.props.lesao.diaMaior} </Text>   
+                                    </Text>                
+
+                                    <Text style={estilos.pacCampo}> Diâmetro menor (mm): 
+                                        <Text style={estilos.dadoCampo}> {this.props.lesao.diaMenor} </Text>                    
+                                    </Text>
                                     
-                                        <BotaoCustomizado comp='MaterialIcons' texto='Excluir' tamanhoFonte={10}
-                                        icone='delete' onPress={() => this._removerImagem()}
-                                        tamanho={25} altura={30} />
+                                    <Text style={estilos.pacCampo}> Diagnóstico: 
+                                        <Text style={estilos.dadoCampo}> {this.props.lesao.diagnostico.toUpperCase()} </Text>                                               
+                                    </Text>                
+
+                                    <Text style={estilos.pacCampo}> Procedimento:
+                                        <Text style={estilos.dadoCampo}> {this.props.lesao.procedimento.toUpperCase()} </Text>                 
+                                    </Text>              
+
+                                    <Text style={estilos.pacCampo}> Observação:
+                                        <Text style={estilos.dadoCampo}> {this.props.lesao.obs.toUpperCase()} </Text>
+                                    </Text>  
+
+                                    <Text style={estilos.pacCampo}> Imagens: 
+                                        <Text style={estilos.dadoCampo}> {this.props.lesao.imagens.length} </Text>
+                                    </Text>  
+
+                                    <ScrollView contentContainerStyle={estilos.exibirImagens}>
+                                        {                                
+                                            imagensExibir 
+                                        }
+                                    </ScrollView> 
+
+                                    <View style={estilos.viewBotaoEditar}>
+                                        <BotaoCustomizado 
+                                            comp='FontAwesome' texto='Editar lesão' tamanho={20} tamanhoFonte={13}
+                                            icone='edit' onPress={() => this.setState({ editar: true })} altura={28}
+                                            corFundo='#999999' 
+                                        />
                                     </View>
+
+                                </View>
+
+                                {
+                                    this.state.imagemSelecionada !== null && 
+                                    <View style={estilos.excluirImagem} >
+                                        <Image source={ this.props.lesao.imagens[this.state.imagemSelecionada] } style={estilos.imgSelecionada} />                                
+                                        
+                                        <View style={estilos.viewBotoesExcluirImagem} >
                                     
-                                    <View style={{ width: '33%', marginLeft: 10 }}>
-                                        <BotaoCustomizado comp='FontAwesome' texto='Cancelar' tamanhoFonte={10}
-                                        icone='close' onPress={() => this.setState({ imagemSelecionada: null })}
-                                        tamanho={25} altura={30} />
+                                            <View style={{ width: '33%', marginRight: 10 }}>
+                                            
+                                                <BotaoCustomizado comp='MaterialIcons' texto='Excluir' tamanhoFonte={10}
+                                                icone='delete' onPress={() => this._removerImagem()}
+                                                tamanho={25} altura={30} corFundo='#d10202'/>
+                                            </View>
+                                            
+                                            <View style={{ width: '33%', marginLeft: 10 }}>
+                                                <BotaoCustomizado comp='FontAwesome' texto='Cancelar' tamanhoFonte={10}
+                                                icone='close' onPress={() => this.setState({ imagemSelecionada: null })}
+                                                tamanho={25} altura={30} />
+                                            </View>
+                                        </View>                        
                                     </View>
-                                </View>                        
-                            </View>
-                        }
+                                }                                                             
 
-                        {
-                            this.state.editar &&
-                            <ScrollView keyboardShouldPersistTaps='handled'>
-                                
-                                <KeyboardAvoidingView  behavior='padding'>
-                                    <View>
-                                        <Text style={estilos.texto}> Região: </Text>                
-                                        <TextInput  style={ estilos.inputs} value={this.props.lesao.regiao} 
-                                            onChangeText={ texto => this.props.alterarRegiao(texto) }
-                                            onSubmitEditing={() => this.diaMaiorRef.focus()} 
-                                            blurOnSubmit={false}/> 
-                                    </View>
+                            </View>              
 
-                                    <View>
-                                        <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
-                                        <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMaior} 
-                                            onChangeText={ texto => this.props.alterarDiaMaior(texto) }
-                                            onSubmitEditing={() => this.diaMenorRef.focus()} 
-                                            ref={(ref) => this.diaMaiorRef=ref}
-                                            blurOnSubmit={false} />    
-                                    </View>
+                        </ScrollView>
 
-                                    <View>
-                                        <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
-                                        <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMenor}  
-                                            onChangeText={ texto => this.props.alterarDiaMenor(texto) }
-                                            onSubmitEditing={() => this.diagRef.focus()} 
-                                            ref={(ref) => this.diaMenorRef=ref}
-                                            blurOnSubmit={false} /> 
-                                    </View>
-
-                                    <View>
-                                        <Text style={estilos.texto}> Diagnóstico: </Text>                
-                                        <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
-                                            onChangeText={ texto => this.props.alterarDiagnostico(texto) }
-                                            onSubmitEditing={() => this.procRef.focus()} 
-                                            ref={(ref) => this.diagRef=ref}
-                                            blurOnSubmit={false} />      
-                                    </View>
-
-                                    <View>
-                                        <Text style={estilos.texto}> Procedimento: </Text>                
-                                        <TextInput  style={ estilos.inputs} value={this.props.lesao.procedimento} 
-                                            onChangeText={ texto => this.props.alterarProcedimento(texto) }
-                                            onSubmitEditing={() => this.obsRef.focus()} 
-                                            ref={(ref) => this.procRef=ref}
-                                            blurOnSubmit={false} />    
-                                    </View>
-
-                                    <View>
-                                        <Text style={estilos.texto}> Observação: </Text>                
-                                        <TextInput style={ estilos.inputs} value={this.props.lesao.obs} 
-                                            onChangeText={ texto => this.props.alterarObs(texto) }
-                                            ref={(ref) => this.obsRef=ref}
-                                            blurOnSubmit={false}   
-                                            onSubmitEditing={ () => this._processaEdicao() } />                                                                                          
-                                    </View>
-                                    
-                                </KeyboardAvoidingView>
-                                
-                            </ScrollView>
-
-                        }                                       
-
-                    </View>              
-
-                </ScrollView>
-                
-                {
-                    !this.state.editar ?
                         <View style={estilos.abaixo} >
 
-                            <View style={estilos.botoes}>
-                                <BotaoCustomizado comp='Entypo' texto='Tirar foto' tamanho={20}
-                                    icone='camera' onPress={ this._pickImage } altura={45} tamanhoFonte={15}
-                                />
+                            <View style={estilos.viewBotoesCamera} >
+                                <View style={{ width: '49%'}}>
+                                    <BotaoCustomizado comp='Entypo' texto='Camera' tamanho={25}
+                                        icone='camera' onPress={ this._pickImage } altura={45} tamanhoFonte={14}
+                                    />
+                                </View>
+
+                                <View style={{ width: '49%'}}>
+                                    <BotaoCustomizado  comp='FontAwesome' texto='Albúm' tamanho={25}
+                                        icone='file-photo-o' onPress={this._pickImageAlbum} altura={45} tamanhoFonte={14}
+                                    />
+                                </View>
                             </View>
 
                             <View style={estilos.botoes}>
-                                <BotaoCustomizado  comp='FontAwesome' texto='Selecionar do álbum' tamanho={20}
-                                    icone='file-photo-o' onPress={this._pickImageAlbum} altura={45} tamanhoFonte={15}
-                                />
-                            </View>
-
-                            <View style={estilos.botoes}>
-                                <BotaoCustomizado comp='MaterialIcons' texto='Vincular lesão ao paciente' tamanho={20}
-                                    icone='attach-file' onPress={ this._concluir } altura={45} tamanhoFonte={15}
+                                <BotaoCustomizado comp='MaterialIcons' texto='Vincular lesão ao paciente' tamanho={32}
+                                    icone='attach-file' onPress={ this._concluir } altura={75} tamanhoFonte={14}
                                 />    
                             </View>
-                        </View>  
-                    :
-                    <View style={estilos.viewBotoesExcluirImagem} >                            
-                        <View style={{ width: '40%', marginRight: 10 }}>
-                        
-                            <BotaoCustomizado comp='FontAwesome' texto='Concluir' tamanhoFonte={13}
-                            icone='check' onPress={() => this._processaEdicao()}
-                            tamanho={25} altura={30} />
                         </View>
-                        
-                        <View style={{ width: '40%', marginLeft: 10 }}>
-                            <BotaoCustomizado comp='FontAwesome' texto='Cancelar' tamanhoFonte={13}
-                            icone='close' onPress={() => this.setState({ editar: false })}
-                            tamanho={25} altura={30} />
-                        </View>
-                    </View>                     
+
+                    </View>
+
 
                 }
                 
-                
+
+                {
+                    this.state.editar &&
+                        <KeyboardAvoidingView  behavior='padding'>
+                            <Text style={estilos.tituloEdicao}> Editando dados da lesão: </Text>
+                            <View>
+                                <Text style={estilos.texto}> Região: </Text>                
+                                <TextInput  style={ estilos.inputs} value={this.props.lesao.regiao} 
+                                    onChangeText={ texto => this.props.alterarRegiao(texto) }
+                                    onSubmitEditing={() => this.diaMaiorRef.focus()} 
+                                    blurOnSubmit={false}/> 
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
+                                <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMaior} 
+                                    onChangeText={ texto => this.props.alterarDiaMaior(texto) }
+                                    onSubmitEditing={() => this.diaMenorRef.focus()} 
+                                    ref={(ref) => this.diaMaiorRef=ref}
+                                    blurOnSubmit={false} />    
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
+                                <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMenor}  
+                                    onChangeText={ texto => this.props.alterarDiaMenor(texto) }
+                                    onSubmitEditing={() => this.diagRef.focus()} 
+                                    ref={(ref) => this.diaMenorRef=ref}
+                                    blurOnSubmit={false} /> 
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Diagnóstico: </Text>                
+                                <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
+                                    onChangeText={ texto => this.props.alterarDiagnostico(texto) }
+                                    onSubmitEditing={() => this.procRef.focus()} 
+                                    ref={(ref) => this.diagRef=ref}
+                                    blurOnSubmit={false} />      
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Procedimento: </Text>                
+                                <TextInput  style={ estilos.inputs} value={this.props.lesao.procedimento} 
+                                    onChangeText={ texto => this.props.alterarProcedimento(texto) }
+                                    onSubmitEditing={() => this.obsRef.focus()} 
+                                    ref={(ref) => this.procRef=ref}
+                                    blurOnSubmit={false} />    
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Observação: </Text>                
+                                <TextInput style={ estilos.inputs} value={this.props.lesao.obs} 
+                                    onChangeText={ texto => this.props.alterarObs(texto) }
+                                    ref={(ref) => this.obsRef=ref}
+                                    blurOnSubmit={false}   
+                                    onSubmitEditing={ () => this._processaEdicao() } />                                                                                          
+                            </View>
+
+                            <View style={estilos.viewBotoesExcluirImagem} >                            
+                                <View style={{ width: '40%', marginRight: 10 }}>
+                                
+                                    <BotaoCustomizado comp='FontAwesome' texto='Concluir' tamanhoFonte={13}
+                                    icone='check' onPress={() => this._processaEdicao()}
+                                    tamanho={22} altura={30} />
+                                </View>
+                                
+                                <View style={{ width: '40%', marginLeft: 10 }}>
+                                    <BotaoCustomizado comp='FontAwesome' texto='Cancelar' tamanhoFonte={13}
+                                    icone='close' onPress={() => this._processaEdicao()}
+                                    tamanho={22} altura={30} />
+                                </View>
+                            </View> 
+                            
+                        </KeyboardAvoidingView>
+                }
                 
             </ScrollView>
             
@@ -387,8 +379,15 @@ const estilos = StyleSheet.create({
         fontWeight: 'bold'
     },
 
+    tituloEdicao:{
+        fontSize: 18,
+        color: '#4d79ff',
+        fontWeight: '700',
+        marginBottom: 5        
+    },
+
     abaixo: {            
-        marginTop: 40,       
+        marginTop: 20,       
     },
 
     texto: {
@@ -404,8 +403,7 @@ const estilos = StyleSheet.create({
     imgMiniLesao: {
         height: 75,
         width: 75,
-        backgroundColor: '#d9d9d9'
-            
+        backgroundColor: '#d9d9d9'                    
     },
     
     textoImg: {
@@ -460,7 +458,22 @@ const estilos = StyleSheet.create({
         flexDirection: 'row', 
         marginTop: 15, 
         justifyContent: 'center'
-    },    
+    },  
+    
+    viewBotoesCamera: {
+        flexDirection: 'row',         
+        justifyContent: 'space-between',
+        marginBottom: 15
+        
+    },     
+
+    viewBotaoEditar:{
+        marginTop: 0,
+        padding: 5,
+        borderTopColor: 'black',
+        borderTopWidth: 1,
+        paddingBottom: 3
+    },
 
     inputs: {
         fontSize: 16,
