@@ -16,7 +16,6 @@ class TelaAdicionarImagemLesao extends Component {
 
     state = {
         image: null,
-        image64: null,
         hasCameraPermission: null,
         seguirSemImg: false,
         imagemSelecionada: null,
@@ -43,10 +42,9 @@ class TelaAdicionarImagemLesao extends Component {
     
         if (!result.cancelled) {
           this.setState({ image: result.uri });
-          this.setState({ image64: result.base64 });
-
+          
           this.props.adicionarImg(result);
-          console.log(result);
+          //console.log(result);
         }
     }; 
 
@@ -62,8 +60,7 @@ class TelaAdicionarImagemLesao extends Component {
 
         //console.log(result);
         if (!result.cancelled) {
-            this.setState({ image: result.uri });
-            this.setState({ image64: result.base64 });
+            this.setState({ image: result.uri });            
   
             this.props.adicionarImg(result);
             //console.log(result);
@@ -201,8 +198,8 @@ class TelaAdicionarImagemLesao extends Component {
                                     <View style={estilos.viewBotaoEditar}>
                                         <BotaoCustomizado 
                                             comp='FontAwesome' texto='Editar lesão' tamanho={20} tamanhoFonte={13}
-                                            icone='edit' onPress={() => this.setState({ editar: true })} altura={28}
-                                            corFundo='#999999' 
+                                            icone='edit' onPress={() => this.setState({ editar: true })} altura={30}
+                                            corFundo='#555555' 
                                         />
                                     </View>
 
@@ -245,7 +242,7 @@ class TelaAdicionarImagemLesao extends Component {
                                 </View>
 
                                 <View style={{ width: '49%'}}>
-                                    <BotaoCustomizado  comp='FontAwesome' texto='Albúm' tamanho={25}
+                                    <BotaoCustomizado  comp='FontAwesome' texto='Album' tamanho={25}
                                         icone='file-photo-o' onPress={this._pickImageAlbum} altura={45} tamanhoFonte={14}
                                     />
                                 </View>
@@ -321,20 +318,15 @@ class TelaAdicionarImagemLesao extends Component {
                                     onSubmitEditing={ () => this._processaEdicao() } />                                                                                          
                             </View>
 
-                            <View style={estilos.viewBotoesExcluirImagem} >                            
-                                <View style={{ width: '40%', marginRight: 10 }}>
-                                
-                                    <BotaoCustomizado comp='FontAwesome' texto='Concluir' tamanhoFonte={13}
-                                    icone='check' onPress={() => this._processaEdicao()}
-                                    tamanho={22} altura={30} />
-                                </View>
-                                
-                                <View style={{ width: '40%', marginLeft: 10 }}>
-                                    <BotaoCustomizado comp='FontAwesome' texto='Cancelar' tamanhoFonte={13}
-                                    icone='close' onPress={() => this._processaEdicao()}
-                                    tamanho={22} altura={30} />
-                                </View>
-                            </View> 
+                            <View>          
+                            <View style={{marginTop: 10}}>                            
+                                <BotaoCustomizado comp='FontAwesome' texto='Concluir' tamanhoFonte={13}
+                                icone='check' onPress={() => this._processaEdicao()}
+                                tamanho={22} altura={40} />
+                            </View>
+                            </View>
+
+                            
                             
                         </KeyboardAvoidingView>
                 }

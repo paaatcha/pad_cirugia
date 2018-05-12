@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, TouchableHighlight, TextInput, Button, Alert, Platform} from 'react-native';
+import { Text, View, ScrollView, Image, StyleSheet, Keyboard, ActivityIndicator, KeyboardAvoidingView, TouchableHighlight, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import axios, { CancelToken } from 'axios';
@@ -10,10 +10,14 @@ import { resetarCartaoSus } from '../actions/buscaCartaoSusActions';
 
 import BotaoCustomizado from './BotaoCustomizado';
 
+import { ImagePicker, Permissions } from 'expo';
+
+import { adicionarLesaoPac } from '../actions/pacienteActions';
 
 class TelaListarLesoes extends Component {
  
     state = {
+        hasCameraPermission: null,
         animating: false,
         andamento: '',    
         lesoesPacientes: [],
@@ -21,10 +25,58 @@ class TelaListarLesoes extends Component {
         lesaoAtual: 0,
         imagemSelecionada: null,
         lesaoSelecionada: null,
-        edicao: false,
-        regiao: ''
+        editar: false,
+        lesaoEdicao: null
     }    
 
+    async componentWillMount(){
+        Keyboard.dismiss();
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        const { status2 } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        this.setState({ hasCameraPermission: status === 'granted' && status2 === 'granted'});
+    }
+
+    _pickImage = async () => {
+        // CHECAR QUESTÃO DA PERMISSÃO
+        let result = await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          aspect: [4, 4],
+          base64: false,
+          quality: 1
+        });
+    
+        //console.log(result);
+    
+        if (!result.cancelled) {
+            let les = this.state.lesaoEdicao;
+            les.imagens.push(result)
+            this.setState({ lesaoEdicao: les });          
+
+          //this.props.adicionarImg(result);
+          //console.log(result);
+        }
+    }; 
+
+    _pickImageAlbum = async () => {
+        // CHECAR QUESTÃO DA PERMISSÃO
+        const result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 4],
+            base64: false,
+            quality: 1,
+            exif: true,
+        });
+
+        //console.log(result);
+        if (!result.cancelled) {
+            let les = this.state.lesaoEdicao;
+            les.imagens.push(result)
+            this.setState({ lesaoEdicao: les });              
+            
+            //this.props.adicionarImg(result);
+            //console.log(result);
+        }
+    };    
     
     _iniciaEnvio = () => {
         Alert.alert(
@@ -149,18 +201,65 @@ class TelaListarLesoes extends Component {
         )  
     } 
     
-    _altRegiao = (texto) => {
-        les = this.state.lesaoEdicao
-        les.regiao = texto
-        this.setState({lesaoEdicao: les})
+    _editaLesao = (texto,campo) => {
+        let les;
+        if (campo === 'regiao'){
+            les = this.state.lesaoEdicao;
+            les.regiao = texto;
+            this.setState({lesaoEdicao: les});
+        } else if (campo === 'diaMaior'){
+            les = this.state.lesaoEdicao;
+            les.diaMaior = texto;
+            this.setState({lesaoEdicao: les});
+        } else if (campo === 'diaMenor'){
+            les = this.state.lesaoEdicao;
+            les.diaMenor = texto;
+            this.setState({lesaoEdicao: les});
+        } else if (campo === 'diag'){
+            les = this.state.lesaoEdicao;
+            les.diagnostico = texto;
+            this.setState({lesaoEdicao: les});
+        } else if (campo === 'proc'){
+            les = this.state.lesaoEdicao;
+            les.procedimento = texto;
+            this.setState({lesaoEdicao: les});
+        } else if (campo === 'obs'){
+            les = this.state.lesaoEdicao;
+            les.obs = texto;
+            this.setState({lesaoEdicao: les});
+        }
     }
+
+    msgFormIncompleto (){
+        Alert.alert(
+            'Atenção',
+            'Todos os campos do formulario devem ser preenchidos, inclusive na edição! ',
+            [             
+                {text: 'OK', onPress: () => console.log('OK msgFormIncompleto presionado')},
+            ],
+            { cancelable: false }
+        ) 
+    }  
+
+    _concluirEdicao = () => {
+        let les = this.state.lesaoEdicao;        
+        if (les.regiao !== '' && les.diaMaior !== '' && les.diaMaior !=='' && les.diagnostico !== '' && les.procedimento !== ''){
+            this.setState({editar: false});
+            this.props.pac.lesoes.splice(this.state.lesaoAtual,1)
+            this.props.adicionarLesaoPac(this.props.lesao);
+        } else {
+            this.msgFormIncompleto();
+        }
+    }
+
 
     render(){
         let lesoesPacientes = [];                       
- 
+        let imagensExibir = [];
+
         for (let i=0; i<this.props.pac.lesoes.length; i++){
             let lesao = this.props.pac.lesoes[i];
-            let imagensExibir = [];
+            
 
             for (let k=0; k<lesao.imagens.length; k++){
                 imagensExibir.push(
@@ -213,15 +312,15 @@ class TelaListarLesoes extends Component {
                                 <View style={{ width: '49%'}}>
                                     <BotaoCustomizado 
                                         comp='FontAwesome' texto='Editar Lesão' tamanho={20} tamanhoFonte={13}
-                                        icone='edit' onPress={() => this.setState({ lesaoSelecionada: i, editar: true })} altura={28}
-                                        corFundo='#999999' 
+                                        icone='edit' onPress={() => this.setState({ lesaoSelecionada: i, editar: true, lesaoEdicao: this.props.pac.lesoes[i] })} altura={30}
+                                        corFundo='#555555' 
                                     />
                                 </View>
 
                                 <View style={{ width: '49%'}}>
                                     <BotaoCustomizado 
                                         comp='FontAwesome' texto='Excluir Lesão' tamanho={20} tamanhoFonte={13}
-                                        icone='trash-o' onPress={ this._msgRemoverLesao } altura={28}
+                                        icone='trash-o' onPress={ this._msgRemoverLesao } altura={30}
                                         corFundo='#d10202' 
                                     />
                                 </View>                                 
@@ -254,13 +353,6 @@ class TelaListarLesoes extends Component {
 
                         </View>
             );
-        }
-
-        let reg;
-        if (this.state.editar){
-            reg = this.props.pac.lesoes[this.state.lesaoAtual].regiao;
-            //this.setState({regiao: reg});
-            //console.log(this.state.regiao);
         }
         
         return (
@@ -298,13 +390,13 @@ class TelaListarLesoes extends Component {
                                 
                                     <BotaoCustomizado comp='Entypo' texto='Anterior' tamanhoFonte={13}
                                     icone='arrow-bold-left' onPress={this._antLesao}
-                                    tamanho={22} altura={30} corFundo='#999999' />
+                                    tamanho={22} altura={30} corFundo='#555555' />
                                 </View>
                                 
                                 <View style={{ width: '45%', marginLeft: 10 }}>
                                     <BotaoCustomizado comp='Entypo' texto='Próxima' tamanhoFonte={13}
                                     icone='arrow-bold-right' onPress={this._proxLesao} posIcon='D'
-                                    tamanho={22} altura={30} corFundo='#999999' />
+                                    tamanho={22} altura={30} corFundo='#555555' />
                                 </View>
                             </View>
                         }
@@ -336,38 +428,79 @@ class TelaListarLesoes extends Component {
                             <Text style={estilos.dadoCampo}> {this.state.lesaoSelecionada} </Text>
                         </Text>
 
-                        {
                         <View>
                             <Text style={estilos.texto}> Região: </Text>                
-                            <TextInput  style={ estilos.inputs} value={reg} 
-                                
-                                
-                                blurOnSubmit={false}
-                            /> 
+                            <TextInput  style={ estilos.inputs } value={this.state.lesaoEdicao.regiao} 
+                                onChangeText={ texto => this._editaLesao(texto,'regiao') }
+                                onSubmitEditing={() => this.diaMaiorRef.focus()} 
+                                blurOnSubmit={false}/> 
                         </View>
-                        }
 
+                        <View>
+                            <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
+                            <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.state.lesaoEdicao.diaMaior} 
+                                onChangeText={ texto => this._editaLesao(texto,'diaMaior') }
+                                onSubmitEditing={() => this.diaMenorRef.focus()} 
+                                ref={(ref) => this.diaMaiorRef=ref}
+                                blurOnSubmit={false} />    
+                        </View>
+                        
+                        <View>
+                                <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
+                                <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.state.lesaoEdicao.diaMenor}  
+                                    onChangeText={ texto => this._editaLesao(texto,'diaMenor') }
+                                    onSubmitEditing={() => this.diagRef.focus()} 
+                                    ref={(ref) => this.diaMenorRef=ref}
+                                    blurOnSubmit={false} /> 
+                        </View>
 
+                        <View>
+                            <Text style={estilos.texto}> Diagnóstico: </Text>                
+                            <TextInput  style={ estilos.inputs} value={this.state.lesaoEdicao.diagnostico} 
+                                onChangeText={ texto => this._editaLesao(texto,'diag') }
+                                onSubmitEditing={() => this.procRef.focus()} 
+                                ref={(ref) => this.diagRef=ref}
+                                blurOnSubmit={false} />      
+                        </View>
 
-                        <View >
+                        <View>
+                            <Text style={estilos.texto}> Procedimento: </Text>                
+                            <TextInput  style={ estilos.inputs} value={this.state.lesaoEdicao.procedimento} 
+                                onChangeText={ texto => this._editaLesao(texto,'proc') }
+                                onSubmitEditing={() => this.obsRef.focus()} 
+                                ref={(ref) => this.procRef=ref}
+                                blurOnSubmit={false} />    
+                        </View>
 
+                        <View>
+                            <Text style={estilos.texto}> Observação: </Text>                
+                            <TextInput style={ estilos.inputs} value={this.state.lesaoEdicao.obs} 
+                                onChangeText={ texto => this._editaLesao(texto,'obs') }
+                                ref={(ref) => this.obsRef=ref}
+                                blurOnSubmit={false}   
+                                />                                                                                          
+                        </View>       
+
+                        { imagensExibir }                                         
+
+                        <View>
                             <View style={estilos.viewBotoesCamera} >
                                 <View style={{ width: '49%'}}>
                                     <BotaoCustomizado comp='Entypo' texto='Camera' tamanho={20}
-                                        icone='camera' onPress={ () => false } altura={45} tamanhoFonte={14}
+                                        icone='camera' onPress={ this._pickImage } altura={45} tamanhoFonte={14}
                                     />
                                 </View>
 
                                 <View style={{ width: '49%'}}>
-                                    <BotaoCustomizado  comp='FontAwesome' texto='Albúm' tamanho={20}
-                                        icone='file-photo-o' onPress={() => false} altura={45} tamanhoFonte={14}
+                                    <BotaoCustomizado  comp='FontAwesome' texto='Album' tamanho={20}
+                                        icone='file-photo-o' onPress={ this._pickImageAlbum } altura={45} tamanhoFonte={14}
                                     />
                                 </View>
                             </View>
 
                             <View style={estilos.botoes}>
                                 <BotaoCustomizado comp='FontAwesome' texto='Concluir' tamanho={20}
-                                    icone='check' onPress={ () => this.setState({editar: false}) } altura={45} tamanhoFonte={14}
+                                    icone='check' onPress={ this._concluirEdicao } altura={45} tamanhoFonte={14}
                                 />    
                             </View>
                         </View>
@@ -582,4 +715,4 @@ const mapStateToProps = state => (
 
 )
 
-export default connect(mapStateToProps, { resetarPaciente, resetarCartaoSus } )(TelaListarLesoes);
+export default connect(mapStateToProps, { resetarPaciente, resetarCartaoSus, adicionarLesaoPac } )(TelaListarLesoes);
