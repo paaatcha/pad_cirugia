@@ -185,7 +185,7 @@ class TelaAdicionarImagemLesao extends Component {
                                         <Text style={estilos.dadoCampo}> {this.props.lesao.obs.toUpperCase()} </Text>
                                     </Text>  
 
-                                    <Text style={estilos.pacCampo}> Imagens: 
+                                    <Text style={estilos.titulo2}> Imagens: 
                                         <Text style={estilos.dadoCampo}> {this.props.lesao.imagens.length} </Text>
                                     </Text>  
 
@@ -265,57 +265,60 @@ class TelaAdicionarImagemLesao extends Component {
                     this.state.editar &&
                         <KeyboardAvoidingView  behavior='padding'>
                             <Text style={estilos.tituloEdicao}> Editando dados da lesão: </Text>
-                            <View>
-                                <Text style={estilos.texto}> Região: </Text>                
-                                <TextInput  style={ estilos.inputs} value={this.props.lesao.regiao} 
-                                    onChangeText={ texto => this.props.alterarRegiao(texto) }
-                                    onSubmitEditing={() => this.diaMaiorRef.focus()} 
-                                    blurOnSubmit={false}/> 
-                            </View>
 
-                            <View>
-                                <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
-                                <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMaior} 
-                                    onChangeText={ texto => this.props.alterarDiaMaior(texto) }
-                                    onSubmitEditing={() => this.diaMenorRef.focus()} 
-                                    ref={(ref) => this.diaMaiorRef=ref}
-                                    blurOnSubmit={false} />    
-                            </View>
+                            <View style={estilos.quadroEditar}>
+                                <View>
+                                    <Text style={estilos.texto}> Região: </Text>                
+                                    <TextInput  style={ estilos.inputs} value={this.props.lesao.regiao} 
+                                        onChangeText={ texto => this.props.alterarRegiao(texto) }
+                                        onSubmitEditing={() => this.diaMaiorRef.focus()} 
+                                        blurOnSubmit={false}/> 
+                                </View>
 
-                            <View>
-                                <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
-                                <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMenor}  
-                                    onChangeText={ texto => this.props.alterarDiaMenor(texto) }
-                                    onSubmitEditing={() => this.diagRef.focus()} 
-                                    ref={(ref) => this.diaMenorRef=ref}
-                                    blurOnSubmit={false} /> 
-                            </View>
+                                <View>
+                                    <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
+                                    <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMaior} 
+                                        onChangeText={ texto => this.props.alterarDiaMaior(texto) }
+                                        onSubmitEditing={() => this.diaMenorRef.focus()} 
+                                        ref={(ref) => this.diaMaiorRef=ref}
+                                        blurOnSubmit={false} />    
+                                </View>
 
-                            <View>
-                                <Text style={estilos.texto}> Diagnóstico: </Text>                
-                                <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
-                                    onChangeText={ texto => this.props.alterarDiagnostico(texto) }
-                                    onSubmitEditing={() => this.procRef.focus()} 
-                                    ref={(ref) => this.diagRef=ref}
-                                    blurOnSubmit={false} />      
-                            </View>
+                                <View>
+                                    <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
+                                    <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMenor}  
+                                        onChangeText={ texto => this.props.alterarDiaMenor(texto) }
+                                        onSubmitEditing={() => this.diagRef.focus()} 
+                                        ref={(ref) => this.diaMenorRef=ref}
+                                        blurOnSubmit={false} /> 
+                                </View>
 
-                            <View>
-                                <Text style={estilos.texto}> Procedimento: </Text>                
-                                <TextInput  style={ estilos.inputs} value={this.props.lesao.procedimento} 
-                                    onChangeText={ texto => this.props.alterarProcedimento(texto) }
-                                    onSubmitEditing={() => this.obsRef.focus()} 
-                                    ref={(ref) => this.procRef=ref}
-                                    blurOnSubmit={false} />    
-                            </View>
+                                <View>
+                                    <Text style={estilos.texto}> Diagnóstico: </Text>                
+                                    <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
+                                        onChangeText={ texto => this.props.alterarDiagnostico(texto) }
+                                        onSubmitEditing={() => this.procRef.focus()} 
+                                        ref={(ref) => this.diagRef=ref}
+                                        blurOnSubmit={false} />      
+                                </View>
 
-                            <View>
-                                <Text style={estilos.texto}> Observação: </Text>                
-                                <TextInput style={ estilos.inputs} value={this.props.lesao.obs} 
-                                    onChangeText={ texto => this.props.alterarObs(texto) }
-                                    ref={(ref) => this.obsRef=ref}
-                                    blurOnSubmit={false}   
-                                    onSubmitEditing={ () => this._processaEdicao() } />                                                                                          
+                                <View>
+                                    <Text style={estilos.texto}> Procedimento: </Text>                
+                                    <TextInput  style={ estilos.inputs} value={this.props.lesao.procedimento} 
+                                        onChangeText={ texto => this.props.alterarProcedimento(texto) }
+                                        onSubmitEditing={() => this.obsRef.focus()} 
+                                        ref={(ref) => this.procRef=ref}
+                                        blurOnSubmit={false} />    
+                                </View>
+
+                                <View>
+                                    <Text style={estilos.texto}> Observação: </Text>                
+                                    <TextInput style={ estilos.inputs} value={this.props.lesao.obs} 
+                                        onChangeText={ texto => this.props.alterarObs(texto) }
+                                        ref={(ref) => this.obsRef=ref}
+                                        blurOnSubmit={false}   
+                                        onSubmitEditing={ () => this._processaEdicao() } />                                                                                          
+                                </View>
                             </View>
 
                             <View>          
@@ -370,6 +373,12 @@ const estilos = StyleSheet.create({
         fontSize: 17,        
         fontWeight: 'bold'
     },
+
+    titulo2:{
+        fontSize: 14,        
+        fontWeight: 'bold',
+        color: '#074fc1'
+    }, 
 
     tituloEdicao:{
         fontSize: 18,
@@ -465,6 +474,15 @@ const estilos = StyleSheet.create({
         borderTopColor: 'black',
         borderTopWidth: 1,
         paddingBottom: 3
+    },
+
+    quadroEditar: {
+        width: '100%',
+        padding:5,
+        borderColor: 'black',
+        borderWidth: 1,
+        marginTop: 5,
+        marginBottom: 5
     },
 
     inputs: {

@@ -246,7 +246,7 @@ class TelaListarLesoes extends Component {
         if (les.regiao !== '' && les.diaMaior !== '' && les.diaMaior !=='' && les.diagnostico !== '' && les.procedimento !== ''){
             this.setState({editar: false});
             this.props.pac.lesoes.splice(this.state.lesaoAtual,1)
-            this.props.adicionarLesaoPac(this.props.lesao);
+            this.props.adicionarLesaoPac(les);
         } else {
             this.msgFormIncompleto();
         }
@@ -299,7 +299,7 @@ class TelaListarLesoes extends Component {
                                 <Text style={estilos.dadoCampo}> {lesao.obs.toUpperCase()} </Text>
                             </Text> 
 
-                            <Text style={estilos.pacCampo}> Imagens: 
+                            <Text style={estilos.titulo2}> Imagens: 
                                 <Text style={estilos.dadoCampo}> {lesao.imagens.length} </Text>
                             </Text> 
                                 <ScrollView contentContainerStyle={estilos.exibirImagens}>                            
@@ -422,66 +422,86 @@ class TelaListarLesoes extends Component {
                 }      
 
                 {
-                    this.state.editar &&
+                    this.state.editar && this.state.imagemSelecionada==null &&
                     <KeyboardAvoidingView  behavior='padding'>
-                        <Text style={estilos.titulo}> Editando lesão: 
+                        <Text style={estilos.titulo3}> Editando lesão: 
                             <Text style={estilos.dadoCampo}> {this.state.lesaoSelecionada} </Text>
                         </Text>
 
-                        <View>
-                            <Text style={estilos.texto}> Região: </Text>                
-                            <TextInput  style={ estilos.inputs } value={this.state.lesaoEdicao.regiao} 
-                                onChangeText={ texto => this._editaLesao(texto,'regiao') }
-                                onSubmitEditing={() => this.diaMaiorRef.focus()} 
-                                blurOnSubmit={false}/> 
+                        <View style={estilos.quadroEditar}>
+
+                            <View>
+                                <Text style={estilos.texto}> Região: </Text>                
+                                <TextInput  style={ estilos.inputs } value={this.state.lesaoEdicao.regiao} 
+                                    onChangeText={ texto => this._editaLesao(texto,'regiao') }
+                                    onSubmitEditing={() => this.diaMaiorRef.focus()} 
+                                    blurOnSubmit={false}/> 
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
+                                <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.state.lesaoEdicao.diaMaior} 
+                                    onChangeText={ texto => this._editaLesao(texto,'diaMaior') }
+                                    onSubmitEditing={() => this.diaMenorRef.focus()} 
+                                    ref={(ref) => this.diaMaiorRef=ref}
+                                    blurOnSubmit={false} />    
+                            </View>
+                            
+                            <View>
+                                    <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
+                                    <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.state.lesaoEdicao.diaMenor}  
+                                        onChangeText={ texto => this._editaLesao(texto,'diaMenor') }
+                                        onSubmitEditing={() => this.diagRef.focus()} 
+                                        ref={(ref) => this.diaMenorRef=ref}
+                                        blurOnSubmit={false} /> 
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Diagnóstico: </Text>                
+                                <TextInput  style={ estilos.inputs} value={this.state.lesaoEdicao.diagnostico} 
+                                    onChangeText={ texto => this._editaLesao(texto,'diag') }
+                                    onSubmitEditing={() => this.procRef.focus()} 
+                                    ref={(ref) => this.diagRef=ref}
+                                    blurOnSubmit={false} />      
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Procedimento: </Text>                
+                                <TextInput  style={ estilos.inputs} value={this.state.lesaoEdicao.procedimento} 
+                                    onChangeText={ texto => this._editaLesao(texto,'proc') }
+                                    onSubmitEditing={() => this.obsRef.focus()} 
+                                    ref={(ref) => this.procRef=ref}
+                                    blurOnSubmit={false} />    
+                            </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Observação: </Text>                
+                                <TextInput style={ estilos.inputs} value={this.state.lesaoEdicao.obs} 
+                                    onChangeText={ texto => this._editaLesao(texto,'obs') }
+                                    ref={(ref) => this.obsRef=ref}
+                                    blurOnSubmit={false}   
+                                    />                                                                                          
+                            </View>  
+
+                        </View>    
+
+
+                        <View style={estilos.quadroEditar}>
+                            <Text style={estilos.titulo3}> Imagens: 
+                                <Text style={estilos.dadoCampo}> {this.state.lesaoEdicao.imagens.length} </Text>
+                            </Text>
+
+                            <ScrollView contentContainerStyle={estilos.exibirImagens}> 
+                                    <View style={estilos.verImgEdicao}>                                                           
+                                        {
+                                            imagensExibir
+                                        }
+                                    </View>
+                                
+                            </ScrollView>
                         </View>
 
-                        <View>
-                            <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
-                            <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.state.lesaoEdicao.diaMaior} 
-                                onChangeText={ texto => this._editaLesao(texto,'diaMaior') }
-                                onSubmitEditing={() => this.diaMenorRef.focus()} 
-                                ref={(ref) => this.diaMaiorRef=ref}
-                                blurOnSubmit={false} />    
-                        </View>
-                        
-                        <View>
-                                <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
-                                <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.state.lesaoEdicao.diaMenor}  
-                                    onChangeText={ texto => this._editaLesao(texto,'diaMenor') }
-                                    onSubmitEditing={() => this.diagRef.focus()} 
-                                    ref={(ref) => this.diaMenorRef=ref}
-                                    blurOnSubmit={false} /> 
-                        </View>
 
-                        <View>
-                            <Text style={estilos.texto}> Diagnóstico: </Text>                
-                            <TextInput  style={ estilos.inputs} value={this.state.lesaoEdicao.diagnostico} 
-                                onChangeText={ texto => this._editaLesao(texto,'diag') }
-                                onSubmitEditing={() => this.procRef.focus()} 
-                                ref={(ref) => this.diagRef=ref}
-                                blurOnSubmit={false} />      
-                        </View>
-
-                        <View>
-                            <Text style={estilos.texto}> Procedimento: </Text>                
-                            <TextInput  style={ estilos.inputs} value={this.state.lesaoEdicao.procedimento} 
-                                onChangeText={ texto => this._editaLesao(texto,'proc') }
-                                onSubmitEditing={() => this.obsRef.focus()} 
-                                ref={(ref) => this.procRef=ref}
-                                blurOnSubmit={false} />    
-                        </View>
-
-                        <View>
-                            <Text style={estilos.texto}> Observação: </Text>                
-                            <TextInput style={ estilos.inputs} value={this.state.lesaoEdicao.obs} 
-                                onChangeText={ texto => this._editaLesao(texto,'obs') }
-                                ref={(ref) => this.obsRef=ref}
-                                blurOnSubmit={false}   
-                                />                                                                                          
-                        </View>       
-
-                        { imagensExibir }                                         
 
                         <View>
                             <View style={estilos.viewBotoesCamera} >
@@ -507,6 +527,30 @@ class TelaListarLesoes extends Component {
 
                     </KeyboardAvoidingView>                    
                 }
+
+                {
+                    this.state.imagemSelecionada !== null && this.state.editar &&                
+                    <View style={estilos.viewExcluirImagemEdicao} >
+                        <Image source={ this.props.pac.lesoes[this.state.lesaoAtual].imagens[this.state.imagemSelecionada] } style={estilos.imgSelecionada} />                                
+                        
+                        <View style={estilos.viewBotoesExcluirImagem} >
+                    
+                            <View style={{ width: '33%', marginRight: 10 }}>
+                            
+                                <BotaoCustomizado comp='MaterialIcons' texto='Excluir' tamanhoFonte={10}
+                                icone='delete' onPress={ this._removerImagem } 
+                                tamanho={25} altura={30} corFundo='#d10202'/>
+                            </View>
+                            
+                            <View style={{ width: '33%', marginLeft: 10 }}>
+                                <BotaoCustomizado comp='FontAwesome' texto='Cancelar' tamanhoFonte={10}
+                                icone='close' onPress={() => this.setState({ imagemSelecionada: null })}
+                                tamanho={25} altura={30} />
+                            </View>
+                        </View>                        
+                    </View>
+                } 
+                
 
                 {
                     this.state.animating &&
@@ -560,6 +604,12 @@ const estilos = StyleSheet.create({
         fontWeight: 'bold',
         color: '#074fc1'
     },    
+
+    titulo3:{
+        fontSize: 17,        
+        fontWeight: 'bold',
+        color: '#074fc1'
+    },
 
     msgTexto:{
         fontSize: 16,                
@@ -679,10 +729,31 @@ const estilos = StyleSheet.create({
         alignItems: 'center'               
     },
 
+    viewExcluirImagemEdicao: {             
+        padding: 15,
+        backgroundColor: '#d9d9d9',
+        justifyContent: 'center',
+        alignItems: 'center'               
+    },
+
     imgSelecionada: {
         alignSelf: 'center',
         height: 200,
         width: 200,
+    },
+     
+    verImgEdicao: {
+        width: '100%',        
+        paddingBottom: 10,
+        paddingTop: 3        
+    },
+
+    quadroEditar: {        
+        padding:5,
+        borderColor: 'black',
+        borderWidth: 1,
+        marginTop: 5,
+        marginBottom: 5
     },
     
     viewBotoesExcluirImagem: {
