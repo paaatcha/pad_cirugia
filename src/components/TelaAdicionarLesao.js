@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, KeyboardAvoidingView, Image, StyleSheet, Keyboard, TextInput, Button, Alert, Platform} from 'react-native';
+import { Text, View, ScrollView, KeyboardAvoidingView, TouchableHighlight, Image, StyleSheet, Keyboard, TextInput, Button, Alert, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
@@ -14,7 +14,13 @@ class TelaAdicionarLesao extends Component {
     constructor (props){
         super(props);
         this.state = {
-            botaoDesabilitar: true
+            botaoDesabilitar: true,
+            isDiag: false, 
+            lesSelecionada: null,
+            listaDiagCompleta: ["CARCINOMA BASOCELULAR", "CARCINOMA ESPINOCELULAR", "DOENÇA DE BOWN", "CERATOSE ACTÍNICA", "LENTIGO", "MICOSE CUTANEA",
+            "NEVO", "NEVO MELANOCÍTICO DISPLÁSICO", "HANSENIASE", "CERATOACANTOMA", "DERMATOFIBROMA", "CROMOBLASTOMICOSE",
+            "MELANOMA", "DERMATO FIBROSSARCOMA", "CORNO CUTÂNEO", "PSORIASE", "CROMOMICOSE", "TRICOEPITELIOMA"].sort(),
+            listaDiag: []
         }
 
         this.processaEntradas = this.processaEntradas.bind(this);        
@@ -37,6 +43,36 @@ class TelaAdicionarLesao extends Component {
         ) 
     }    
 
+    _autoCompDiag(texto){
+        if (texto.length > 0){
+            this.setState({isDiag: true});
+        } else {
+            this.setState({isDiag: false});
+        }
+
+        this.props.alterarDiagnostico(texto);
+
+        let listaSugestao = [];
+        query = texto.toUpperCase();
+        for (i=0; i < this.state.listaDiagCompleta.length; i++){
+            if (this.state.listaDiagCompleta[i].indexOf(query) > -1){
+                listaSugestao.push(this.state.listaDiagCompleta[i]);
+            }
+        }
+
+        if (listaSugestao.length == 0){
+            this.setState({isDiag: false});
+        }
+
+        this.setState({listaDiag: listaSugestao});        
+        console.log(listaSugestao);
+    }
+
+    setSelecionado (les){
+        this.props.alterarDiagnostico(les);
+        this.setState({isDiag: false});
+    }
+
     processaEntradas(){
         if (this.props.lesao.regiao == ''){            
             this.msgFormIncompleto ('Região');
@@ -55,6 +91,17 @@ class TelaAdicionarLesao extends Component {
 
     render(){
         
+        let opcoesDiag = [];
+
+        for (i=0; i < this.state.listaDiag.length; i++){
+            let les = this.state.listaDiag[i];
+            opcoesDiag.push(
+                <TouchableHighlight key={i} style={{backgroundColor: '#d9d9d9'}}                 
+                onPress={() => this.setSelecionado(les) }>
+                    <Text style={{fontSize: 15, marginBottom: 2}}> {les} </Text>
+                </TouchableHighlight>
+            );            
+        }
 
         return (
             
@@ -69,9 +116,27 @@ class TelaAdicionarLesao extends Component {
                                 <TextInput  style={ estilos.inputs} value={this.props.lesao.regiao} 
                                     onChangeText={ texto => this.props.alterarRegiao(texto) }
                                     onSubmitEditing={() => this.diaMaiorRef.focus()} 
-                                    blurOnSubmit={false}
+                                    blurOnSubmit={false}                                    
                                 /> 
                             </View>
+
+                            <View>
+                                <Text style={estilos.texto}> Diagnóstico: </Text>                
+                                <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
+                                    onChangeText={ texto => this._autoCompDiag(texto) }
+                                    onSubmitEditing={() => this.procRef.focus()} 
+                                    ref={(ref) => this.diagRef=ref}
+                                    blurOnSubmit={false}
+                                />      
+                            </View>  
+
+                            {   this.state.isDiag &&
+                                <View style={estilos.boxAutoCompletar}>
+                                    {
+                                        opcoesDiag
+                                    }
+                                </View>
+                            }
 
                             <View>
                                 <Text style={estilos.texto}> Diâmetro maior (mm): </Text>                
@@ -91,18 +156,7 @@ class TelaAdicionarLesao extends Component {
                                     ref={(ref) => this.diaMenorRef=ref}
                                     blurOnSubmit={false}
                                 /> 
-                            </View>
-
-                            <View>
-                                <Text style={estilos.texto}> Diagnóstico: </Text>                
-                                <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
-                                    onChangeText={ texto => this.props.alterarDiagnostico(texto) }
-                                    onSubmitEditing={() => this.procRef.focus()} 
-                                    ref={(ref) => this.diagRef=ref}
-                                    blurOnSubmit={false}
-                                />      
-                            </View>
-
+                            </View>                            
 
                             <View>
                                 <Text style={estilos.texto}> Procedimento: </Text>                
@@ -163,6 +217,14 @@ const estilos = StyleSheet.create({
     texto: {
         fontSize: 15,
         fontWeight: '700'       
+    },
+
+    boxAutoCompletar:{
+        backgroundColor: '#ccc', 
+        marginBottom:5,
+        borderColor: 'black',
+        borderWidth: 1,
+        marginTop: -4
     },
 
     inputs: {
