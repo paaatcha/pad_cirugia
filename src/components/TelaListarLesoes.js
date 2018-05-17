@@ -17,11 +17,11 @@ import { adicionarLesaoPac } from '../actions/pacienteActions';
 class TelaListarLesoes extends Component {
  
     state = {
+        url: 'http://172.20.74.120:8080/APIrequisicoes/',
+        conectado: false,
         hasCameraPermission: null,
         animating: false,
-        andamento: '',    
-        lesoesPacientes: [],
-        imagesLesao: [],
+        andamento: '',            
         lesaoAtual: 0,
         imagemSelecionada: null,
         lesaoSelecionada: null,
@@ -101,59 +101,88 @@ class TelaListarLesoes extends Component {
         )  
     }    
 
+    async ack (){
+        let source = CancelToken.source();
+        let url = this.state.url + 'ack'
+        setTimeout(() => {
+            source.cancel();
+        },5000);
+
+        console.log('ACK enviar lesoes iniciado')
+
+        await axios.get(url, {cancelToken: source.token})
+        .then( response => {  
+            console.log('Enviar lesoes conectado na rede');          
+            this.setState({conectado: true});
+        }) 
+        .catch( () => {
+            console.log('Enviar lesoes não conectado na rede');
+            this._msgFalhaEnvio();
+            this.setState({conectado: false});
+        });
+    }    
+
     _finalizarAplicacao = async () => {   
         let source = CancelToken.source();
         let lesoes = this.props.pac.lesoes;
-        let urlPost = 'http://192.168.1.99:8080//APIrequisicoes/paciente/cadastrarLesoes/' + this.props.cartaoSus;  
+        let urlPost = this.state.url + 'paciente/cadastrarLesoes/' + this.props.cartaoSus;  
         let okEnvio = false; 
         
-        this.setState({
-            animating: true            
-        });
+        this.setState({animating: true});
 
-        setTimeout(() => {
-            source.cancel();
-        },30000);
+        // VERIFICANDO CONEXÃO COM SERVIDOR
+        await this.ack()
+        
+        
+        if (this.state.conectado){
 
-       for(let i=0; i<lesoes.length; i++){
-            let les = lesoes[i];             
-            let dados = new FormData(); 
-            let imagens = les.imagens;  
-            
-            this.setState({andamento: (i+1).toString() + ' de ' + lesoes.length.toString() + '...' }); 
+            console.log('INICIANDO ENVIO');
 
-            dados.append('regiao', les.regiao);
-            dados.append('diaMaior', les.diaMaior);
-            dados.append('diaMenor', les.diaMenor);
-            dados.append('diagnostico', les.diagnostico);
-            dados.append('procedimento', les.procedimento);
-            dados.append('obs', les.obs);
+            setTimeout(() => {
+                source.cancel();
+            },60000);
 
-           for (let k=0; k<imagens.length; k++){
-                dados.append('imagem', {
-                        uri: imagens[k].uri,
-                        name: new Date().getTime().toString(),
-                        type: 'image/jpg'
-                    }            
-                );
-            }                
+            for(let i=0; i<lesoes.length; i++){
+                let les = lesoes[i];             
+                let dados = new FormData(); 
+                let imagens = les.imagens;  
+                
+                this.setState({andamento: (i+1).toString() + ' de ' + lesoes.length.toString() + '...' }); 
 
-            await axios({
-                method: 'post', 
-                url: urlPost,
-                data: dados,
-                config: {
-                    'Content-Type': 'multipart/form-data',
-                    'cancelToken': 'source.token'
-                }
-            })
-            .then(response => {
-                console.log(response.status);                  
-                okEnvio = true;              
-            })
-            .catch ( () => this._msgFalhaEnvio() );
+                dados.append('regiao', les.regiao);
+                dados.append('diaMaior', les.diaMaior);
+                dados.append('diaMenor', les.diaMenor);
+                dados.append('diagnostico', les.diagnostico);
+                dados.append('procedimento', les.procedimento);
+                dados.append('obs', les.obs);
 
-        }   
+                for (let k=0; k<imagens.length; k++){
+                        dados.append('imagem', {
+                                uri: imagens[k].uri,
+                                name: new Date().getTime().toString(),
+                                type: 'image/jpg'
+                            }            
+                        );
+                }                
+
+                await axios({
+                    method: 'post', 
+                    url: urlPost,
+                    data: dados,
+                    config: {
+                        'Content-Type': 'multipart/form-data',
+                        'cancelToken': 'source.token'
+                    }
+                })
+                .then(response => {
+                    console.log(response.status);                  
+                    okEnvio = true;              
+                })
+                .catch ( () => this._msgFalhaEnvio() );
+            }   
+        }
+
+        this.setState({animating: false});
 
         if (okEnvio){
             this.props.resetarPaciente();
@@ -168,6 +197,8 @@ class TelaListarLesoes extends Component {
         if (les < numLes-1){
             les++;
             this.setState({lesaoAtual: les});
+        } else if (les == numLes-1){
+            this.setState({lesaoAtual: 0});
         }
     }
 
@@ -176,6 +207,8 @@ class TelaListarLesoes extends Component {
         if (les > 0){
             les--;
             this.setState({lesaoAtual: les});
+        } else if (les == 0){
+            this.setState({lesaoAtual: this.props.pac.lesoes.length-1});
         }
     }
 
@@ -244,7 +277,7 @@ class TelaListarLesoes extends Component {
     _concluirEdicao = () => {
         let les = this.state.lesaoEdicao;        
         if (les.regiao !== '' && les.diaMaior !== '' && les.diaMaior !=='' && les.diagnostico !== '' && les.procedimento !== ''){
-            this.setState({editar: false});
+            this.setState({editar: false, lesaoAtual: this.props.pac.lesoes.length-1});
             this.props.pac.lesoes.splice(this.state.lesaoAtual,1)
             this.props.adicionarLesaoPac(les);
         } else {
@@ -255,14 +288,14 @@ class TelaListarLesoes extends Component {
 
     render(){
         let lesoesPacientes = [];                       
-        let imagensExibir = [];
+        let todasImagens = [];
 
         for (let i=0; i<this.props.pac.lesoes.length; i++){
             let lesao = this.props.pac.lesoes[i];
-            
+            let imagensLesao = []
 
             for (let k=0; k<lesao.imagens.length; k++){
-                imagensExibir.push(
+                imagensLesao.push(
                     <TouchableHighlight key={lesao.imagens[k].uri}                 
                         onLongPress={() => this.setState({ imagemSelecionada: k})} 
                         style={{marginRight: 5, marginTop: 5, marginBottom: 5}}
@@ -272,6 +305,9 @@ class TelaListarLesoes extends Component {
                     </TouchableHighlight>
                 );
             }
+
+            todasImagens.push(imagensLesao)
+            imagensLesao = []
 
             lesoesPacientes.push(
                         <View key={i} style={estilos.dadosLesao}> 
@@ -304,7 +340,8 @@ class TelaListarLesoes extends Component {
                             </Text> 
                                 <ScrollView contentContainerStyle={estilos.exibirImagens}>                            
                                     {
-                                        imagensExibir
+                                        todasImagens[i]
+                                        //imagensLesao
                                     }
                                 </ScrollView>
 
@@ -492,18 +529,17 @@ class TelaListarLesoes extends Component {
                             </Text>
 
                             <ScrollView contentContainerStyle={estilos.exibirImagens}> 
-                                    <View style={estilos.verImgEdicao}>                                                           
-                                        {
-                                            imagensExibir
+                                                                                             
+                                        {                                            
+                                            todasImagens[this.state.lesaoAtual]
                                         }
-                                    </View>
+                                    
                                 
                             </ScrollView>
                         </View>
 
 
-
-                        <View>
+                        <View style={{marginTop: 5}}>
                             <View style={estilos.viewBotoesCamera} >
                                 <View style={{ width: '49%'}}>
                                     <BotaoCustomizado comp='Entypo' texto='Camera' tamanho={20}
@@ -742,15 +778,14 @@ const estilos = StyleSheet.create({
         width: 200,
     },
      
-    verImgEdicao: {
-        width: '100%',        
+    verImgEdicao: {          
         paddingBottom: 10,
         paddingTop: 3        
     },
 
     quadroEditar: {        
         padding:5,
-        borderColor: 'black',
+        borderColor: '#999',
         borderWidth: 1,
         marginTop: 5,
         marginBottom: 5

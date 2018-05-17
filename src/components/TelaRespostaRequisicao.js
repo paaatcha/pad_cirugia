@@ -78,7 +78,7 @@ const estilos = StyleSheet.create({
     },
 
     acima: {
-        flex: 4,              
+        flex: 3,              
     },
 
     abaixo: {

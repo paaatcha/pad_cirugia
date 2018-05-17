@@ -15,7 +15,9 @@ class TelaBuscar extends Component{
         super(props);
         this.state = {
             botaoDesabilitar: true,
-            animating: false
+            animating: false,
+            url: 'http://172.20.74.120:8080/APIrequisicoes/',
+            conectado: false
         }        
 
         this.processaRequisicao = this.processaRequisicao.bind(this);
@@ -23,34 +25,64 @@ class TelaBuscar extends Component{
         this.msgFalhaRequisicao = this.msgFalhaRequisicao.bind(this);
     }
 
-    async processaRequisicao (){
+    async ack (){
         let source = CancelToken.source();
-        let url = 'http://192.168.1.99:8080/APIrequisicoes/paciente/' + this.props.cartaoSus;
-
-        console.log(url);
-        Keyboard.dismiss();
-        this.setState({animating: true});
-
+        let url = this.state.url + 'ack'
         setTimeout(() => {
             source.cancel();
         },5000);
 
+        console.log('ACK telabuscar iniciado')
+
         await axios.get(url, {cancelToken: source.token})
-        .then( response => {            
-            this.props.dadosPaciente(response.data);            
-
-            if (this.props.pac.nome === null){
-                this.msgPacienteNaoEncontrado();
-            } else {
-                Actions.telaRespostaRequisicao();                
-            }
-
+        .then( response => {  
+            console.log('Telabuscar conectado na rede');          
+            this.setState({conectado: true});
         }) 
         .catch( () => {
+            console.log('Telabuscar não conectado na rede');
             this.msgFalhaRequisicao();
+            this.setState({conectado: false});
         });
+    }
+
+    async processaRequisicao (){
+        
+        this.setState({animating: true});
+
+        // VERIFICANDO CONEXÃO COM SERVIDOR
+        await this.ack();
+
+        if (this.state.conectado){
+        
+            let source = CancelToken.source();
+            let url = this.state.url + 'paciente/' + this.props.cartaoSus;
+
+            console.log(url);
+            Keyboard.dismiss();            
+
+            setTimeout(() => {
+                source.cancel();
+            },5000);
+
+            await axios.get(url, {cancelToken: source.token})
+            .then( response => {            
+                this.props.dadosPaciente(response.data);            
+
+                if (this.props.pac.nome === null){
+                    this.msgPacienteNaoEncontrado();
+                } else {
+                    Actions.telaRespostaRequisicao();                
+                }
+
+            }) 
+            .catch( () => {
+                this.msgFalhaRequisicao();
+            });
+        }
 
         this.setState({animating: false});
+
     } 
 
     msgPacienteNaoEncontrado (){  
@@ -67,7 +99,7 @@ class TelaBuscar extends Component{
     msgFalhaRequisicao (){
         Alert.alert(
             'Atenção',
-            'Falha na comunicação com o servidor. Verifique se você está conectado na rede PAD-UFES. Se sim, verifique se o 3G do seu celular está ativo. Caso positivo, desative-o. Se ainda assim o erro persistir, contate o administrador do sistema.',
+            'Falha na comunicação com o servidor. Verifique se você está conectado na rede PAD-UFES. Se sim, verifique se o 3G do seu celular está ativo. Caso esteja, desative-o. Se ainda assim o erro persistir, contate o administrador do sistema.',
             [             
                 {text: 'OK', onPress: () => console.log('OK Pressed')},
             ],

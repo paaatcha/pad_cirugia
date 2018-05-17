@@ -42,13 +42,12 @@ export default Rotas = (props) => {
 
                 <Scene key='telaRespostaRequisicao' component={TelaRespostaRequisicao} title='Dados do paciente' />
 
-                <Scene key='telaAdicionarLesao' component={TelaAdicionarLesao} title='Adicionar Lesão' 
-                    titleStyle={{marginLeft: margem}} 
+                <Scene key='telaAdicionarLesao' initial component={TelaAdicionarLesao} title='Adicionar Lesão' 
+                    renderLeftButton={<View/>} titleStyle={{marginLeft: margem}} type={ActionConst.RESET} 
                 />
 
-                <Scene key='telaAdicionarImagemLesao' initial component={TelaAdicionarImagemLesao} title='Adicionar imagem' 
-                    titleStyle={{marginLeft: margem}} 
-                    backTitle=" " 
+                <Scene key='telaAdicionarImagemLesao' component={TelaAdicionarImagemLesao} title='Adicionar imagem' 
+                    renderLeftButton={<View/>} titleStyle={{marginLeft: margem}} type={ActionConst.RESET}
                 />
 
 
