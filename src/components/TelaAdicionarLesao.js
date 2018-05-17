@@ -93,7 +93,6 @@ class TelaAdicionarLesao extends Component {
                                 /> 
                             </View>
 
-
                             <View>
                                 <Text style={estilos.texto}> Diagnóstico: </Text>                
                                 <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
