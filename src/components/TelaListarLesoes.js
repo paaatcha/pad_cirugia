@@ -449,7 +449,8 @@ class TelaListarLesoes extends Component {
 
                             <View style={estilos.botoes}>
                                 <BotaoCustomizado comp='FontAwesome' texto='Enviar lesões cadastradas' tamanhoFonte={14}
-                                    icone='send' onPress={ this._iniciaEnvio } tamanho={32} altura={75} desabilitado={this.props.pac.lesoes.length == 0}
+                                    icone='send' onPress={ this._iniciaEnvio } tamanho={32} altura={75} 
+                                    desabilitado={this.props.pac.lesoes.length == 0} corFundo='#00b38f'
                                 />    
                             </View>                    
 
@@ -461,9 +462,7 @@ class TelaListarLesoes extends Component {
                 {
                     this.state.editar && this.state.imagemSelecionada==null &&
                     <KeyboardAvoidingView  behavior='padding'>
-                        <Text style={estilos.titulo3}> Editando lesão: 
-                            <Text style={estilos.dadoCampo}> {this.state.lesaoSelecionada} </Text>
-                        </Text>
+                        <Text style={estilos.titulo3}> Editando lesão: </Text>
 
                         <View style={estilos.quadroEditar}>
 
@@ -788,7 +787,7 @@ const estilos = StyleSheet.create({
         borderColor: '#999',
         borderWidth: 1,
         marginTop: 5,
-        marginBottom: 5
+        marginBottom: 5        
     },
     
     viewBotoesExcluirImagem: {

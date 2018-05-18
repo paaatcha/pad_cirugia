@@ -65,7 +65,7 @@ class TelaAdicionarLesao extends Component {
         }
 
         this.setState({listaDiag: listaSugestao});        
-        console.log(listaSugestao);
+        //console.log(listaSugestao);
     }
 
     setSelecionado (les){
@@ -115,7 +115,7 @@ class TelaAdicionarLesao extends Component {
                                 <Text style={estilos.texto}> Região: </Text>                
                                 <TextInput  style={ estilos.inputs} value={this.props.lesao.regiao} 
                                     onChangeText={ texto => this.props.alterarRegiao(texto) }
-                                    onSubmitEditing={() => this.diaMaiorRef.focus()} 
+                                    onSubmitEditing={() => this.diagRef.focus()} 
                                     blurOnSubmit={false}                                    
                                 /> 
                             </View>
@@ -124,13 +124,14 @@ class TelaAdicionarLesao extends Component {
                                 <Text style={estilos.texto}> Diagnóstico: </Text>                
                                 <TextInput  style={ estilos.inputs} value={this.props.lesao.diagnostico} 
                                     onChangeText={ texto => this._autoCompDiag(texto) }
-                                    onSubmitEditing={() => this.procRef.focus()} 
+                                    onSubmitEditing={() => this.diaMaiorRef.focus()} 
                                     ref={(ref) => this.diagRef=ref}
                                     blurOnSubmit={false}
                                 />      
                             </View>  
 
-                            {   this.state.isDiag &&
+                            {   
+                                this.state.isDiag &&
                                 <View style={estilos.boxAutoCompletar}>
                                     {
                                         opcoesDiag
@@ -152,7 +153,7 @@ class TelaAdicionarLesao extends Component {
                                 <Text style={estilos.texto}> Diâmetro menor (mm): </Text>                
                                 <TextInput  style={ estilos.inputs} keyboardType='numeric' value={this.props.lesao.diaMenor}  
                                     onChangeText={ texto => this.props.alterarDiaMenor(texto) }
-                                    onSubmitEditing={() => this.diagRef.focus()} 
+                                    onSubmitEditing={() => this.procRef.focus()} 
                                     ref={(ref) => this.diaMenorRef=ref}
                                     blurOnSubmit={false}
                                 /> 

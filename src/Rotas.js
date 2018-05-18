@@ -51,7 +51,7 @@ export default Rotas = (props) => {
                 />
 
 
-                <Scene key='telaListarLesoes'  component={TelaListarLesoes} title='Lesões adicionadas' 
+                <Scene key='telaListarLesoes' component={TelaListarLesoes} title='Lesões adicionadas' 
                     renderLeftButton={<View/>} titleStyle={{marginLeft: margem}} type={ActionConst.RESET}
                 />
 
