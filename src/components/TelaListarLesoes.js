@@ -17,7 +17,7 @@ import { adicionarLesaoPac } from '../actions/pacienteActions';
 class TelaListarLesoes extends Component {
  
     state = {
-        url: 'http://172.20.74.120:8080/APIrequisicoes/',
+        url: 'http://192.168.0.150:8080/APIrequisicoes/',
         conectado: false,
         hasCameraPermission: null,
         animating: false,

@@ -14,3 +14,12 @@ export const resetarPaciente = () => {
         }
     );
 }
+
+export const alterarLesaoPac = (dados) => {
+    return (
+        {
+            type: 'resetarPaciente',
+            payload: dados            
+        }
+    );
+}

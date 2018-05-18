@@ -1,3 +1,4 @@
+
 const INITIAL_STATE = {
     regiao: '',
     diaMaior: '',
@@ -26,7 +27,7 @@ export default (state = INITIAL_STATE, action) => {
         return { ...state, imagens: [...state.imagens, action.payload] };
     } if (action.type === 'resetarLesao'){
         return { ...state, ...INITIAL_STATE }
-    }    
+    }
 
     return state;
 } 

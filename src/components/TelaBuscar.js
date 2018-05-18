@@ -16,7 +16,7 @@ class TelaBuscar extends Component{
         this.state = {
             botaoDesabilitar: true,
             animating: false,
-            url: 'http://172.20.74.120:8080/APIrequisicoes/',
+            url: 'http://192.168.0.150:8080/APIrequisicoes/',
             conectado: false
         }        
 

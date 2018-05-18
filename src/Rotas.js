@@ -7,8 +7,9 @@ import TelaBuscar from './components/TelaBuscar';
 import TelaRespostaRequisicao from './components/TelaRespostaRequisicao';
 import TelaAdicionarLesao from './components/TelaAdicionarLesao';
 import TelaAdicionarImagemLesao from './components/TelaAdicionarImagemLesao'; 
-import TelaListarLesoes from './components/TelaListarLesoes'
-import TelaFinal from './components/TelaFinal'
+import TelaListarLesoes from './components/TelaListarLesoes';
+import TelaFinal from './components/TelaFinal';
+import TelaEditarLesao from './components/TelaEditarLesao';
 
 import { MaterialCommunityIcons} from '@expo/vector-icons';
 
@@ -42,7 +43,7 @@ export default Rotas = (props) => {
 
                 <Scene key='telaRespostaRequisicao' component={TelaRespostaRequisicao} title='Dados do paciente' />
 
-                <Scene key='telaAdicionarLesao' initial component={TelaAdicionarLesao} title='Adicionar Lesão' 
+                <Scene key='telaAdicionarLesao' component={TelaAdicionarLesao} title='Adicionar Lesão' 
                     renderLeftButton={<View/>} titleStyle={{marginLeft: margem}} type={ActionConst.RESET} 
                 />
 
@@ -59,6 +60,11 @@ export default Rotas = (props) => {
                 <Scene key='telaFinal' component={TelaFinal} hideNavBar={true} 
                     renderLeftButton={<View/>} type={ActionConst.RESET} 
                 />
+
+                <Scene key='telaEditarLesao' initial component={TelaEditarLesao} title='Editando lesão' 
+                    renderLeftButton={<View/>} titleStyle={{marginLeft: margem}} type={ActionConst.RESET}
+                />
+
             </Scene>
         </Router> 
     ); 

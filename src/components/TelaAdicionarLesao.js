@@ -17,9 +17,7 @@ class TelaAdicionarLesao extends Component {
             botaoDesabilitar: true,
             isDiag: false, 
             lesSelecionada: null,
-            listaDiagCompleta: ["CARCINOMA BASOCELULAR", "CARCINOMA ESPINOCELULAR", "DOENÇA DE BOWN", "CERATOSE ACTÍNICA", "LENTIGO", "MICOSE CUTANEA",
-            "NEVO", "NEVO MELANOCÍTICO DISPLÁSICO", "HANSENIASE", "CERATOACANTOMA", "DERMATOFIBROMA", "CROMOBLASTOMICOSE",
-            "MELANOMA", "DERMATO FIBROSSARCOMA", "CORNO CUTÂNEO", "PSORIASE", "CROMOMICOSE", "TRICOEPITELIOMA"].sort(),
+            listaDiagCompleta: this.props.listaAutoComp.listaAutoCompDiag,
             listaDiag: []
         }
 
@@ -256,7 +254,8 @@ const estilos = StyleSheet.create({
 
 const mapStateToProps = state => (
     {
-        lesao: state.lesaoReducer
+        lesao: state.lesaoReducer,
+        listaAutoComp: state.listasAutoCompReducer
     }
 
 )

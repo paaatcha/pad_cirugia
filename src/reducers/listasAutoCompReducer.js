@@ -1,0 +1,14 @@
+const INITIAL_STATE = {
+    listaAutoCompDiag: ["CARCINOMA BASOCELULAR", "CARCINOMA ESPINOCELULAR", "DOENÇA DE BOWN", "CERATOSE ACTÍNICA", "LENTIGO", "MICOSE CUTANEA",
+    "NEVO", "NEVO MELANOCÍTICO DISPLÁSICO", "HANSENIASE", "CERATOACANTOMA", "DERMATOFIBROMA", "CROMOBLASTOMICOSE",
+    "MELANOMA", "DERMATO FIBROSSARCOMA", "CORNO CUTÂNEO", "PSORIASE", "CROMOMICOSE", "TRICOEPITELIOMA"].sort(),
+
+    listaAutoCompRegiao: [],
+
+    listaAutoCompProc: []
+    
+}
+
+export default (state = INITIAL_STATE, action) => {    
+    return state;
+} 
